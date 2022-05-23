@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for dir in tmux vim; do {
+	(cd "$dir" && ./setup)
+}
+
