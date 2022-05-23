@@ -12,10 +12,10 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
   Plug 'pangloss/vim-javascript'
   Plug 'fatih/vim-go'
   Plug 'airblade/vim-gitgutter'
-	Plug 'vim-scripts/RltvNmbr.vim'
+  Plug 'vim-scripts/RltvNmbr.vim'
   call plug#end()
   let g:go_fmt_fail_silently = 0 " let me out even with errors
-	"let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim' ]
+  "let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim' ]
   set updatetime=100
 "  else
 "  " Install vim-plug if not already installed
