@@ -1,0 +1,7 @@
+[user]
+	email = me@thomasanderson.cloud
+	name = thomas
+[merge]
+	conflictstyle = diff3
+[core]
+	editor = vi
