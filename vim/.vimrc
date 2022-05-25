@@ -16,6 +16,7 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
   Plug 'fatih/vim-go'
   Plug 'airblade/vim-gitgutter'
   Plug 'vim-scripts/RltvNmbr.vim'
+  Plug 'morhetz/gruvbox'
   call plug#end()
   set updatetime=100
 "  else
@@ -43,8 +44,29 @@ let g:pandoc#syntax#conceal#urls = 0
 let g:pandoc#syntax#conceal#blacklist = [ 'quotes', 'squotes', 'apostrophe', 'atx', 'codeblock_delim' ]
 let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim', 'go', 'markdown', 'python', 'bash=sh' ]
 
-" open file browser with gz
+" gruvbox settings
+colorscheme gruvbox
+let g:gruvbox_italic = 1
+
+" toggle relative line numbers with gr
+map <silent> gr :RN<CR>
+
+" toggle file browser with gz
 map <silent> gz :Lexplore<CR>
+
+" toggle transparent background
+let t:is_transparent = 0
+function! ToggleTransparent()
+  if t:is_transparent == 0
+    " Might also want to set guibg=NONE
+    hi Normal ctermbg=NONE
+    let t:is_transparent = 1
+  else
+    set background=dark
+    let t:is_transparent = 0
+  endif
+endfunction
+nnoremap <silent> <C-t> : call ToggleTransparent()<CR>
 
 " resize windows with <. >, +, _
 map < <C-W><
