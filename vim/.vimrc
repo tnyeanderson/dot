@@ -8,15 +8,12 @@ set background=dark
 if filereadable(expand("~/.vim/autoload/plug.vim"))
   call plug#begin('~/.vimplugins')
   Plug 'vim-pandoc/vim-pandoc'
-  Plug 'https://gitlab.com/rwxrob/vim-pandoc-syntax-simple'
+  Plug 'vim-pandoc/vim-pandoc-syntax'
   Plug 'pangloss/vim-javascript'
   Plug 'fatih/vim-go'
   Plug 'airblade/vim-gitgutter'
   Plug 'vim-scripts/RltvNmbr.vim'
   call plug#end()
-  let g:go_fmt_fail_silently = 0 " let me out even with errors
-  let g:pandoc#modules#disabled = ["folding"]
-  "let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim' ]
   set updatetime=100
 "  else
 "  " Install vim-plug if not already installed
@@ -34,6 +31,15 @@ let g:netrw_browse_split = 2
 let g:netrw_altv = 1
 let g:netrw_winsize = 10
 
+" Go settings
+let g:go_fmt_fail_silently = 0 " let me out even with errors
+
+" Pandoc syntax settings
+let g:pandoc#modules#disabled = [ 'folding' ]
+let g:pandoc#syntax#conceal#urls = 0
+let g:pandoc#syntax#conceal#blacklist = [ 'quotes', 'squotes', 'apostrophe', 'atx', 'codeblock_delim' ]
+let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim', 'go', 'markdown', 'python', 'bash=sh' ]
+
 " open file browser with gz
 map <silent> gz :Lexplore<CR>
 
@@ -42,3 +48,4 @@ map < <C-W><
 map > <C-W>>
 map + <C-W>+
 map _ <C-W>-
+
