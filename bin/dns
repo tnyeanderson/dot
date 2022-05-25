@@ -1,0 +1,3 @@
+#!/bin/bash
+
+nmcli device show enp4s0 | grep IP4.DNS

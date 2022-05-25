@@ -1,0 +1,41 @@
+#!/bin/bash
+
+new_session() {
+	tmux
+}
+
+interactive_attach() {
+	# If no sessions available, open a new one
+	if ! tmux ls &>/dev/null; then
+		tmux ls
+		echo
+		read -rp 'Press enter for a new session, or type anything else to exit' ID
+		if [[ -z "$ID" ]]; then
+			new_session
+		fi
+		exit
+	fi
+
+	# If only one session, attach to it
+	sessions=$(tmux ls)
+	num_sessions=$(echo "$sessions" | wc -l)
+	if ((num_sessions == 1)); then
+		tmux attach-session -t "${sessions:0:1}"
+		exit
+	fi
+
+	# Prompt the user if more than one session
+	tmux ls
+	echo
+	read -rp 'Select an ID or leave empty for a new session: ' ID
+	tmux attach-session -t "$ID"
+}
+
+case "$1" in
+a)
+	interactive_attach
+	exit
+	;;
+esac
+
+tmux "$@"
