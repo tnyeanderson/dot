@@ -4,6 +4,9 @@ set nocompatible
 set backspace=2
 set background=dark
 
+" yes, I accept the risks
+set noswapfile
+
 " only load plugins if Plug detected
 if filereadable(expand("~/.vim/autoload/plug.vim"))
   call plug#begin('~/.vimplugins')
@@ -24,17 +27,17 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
 "  endif
 endif
 
-" NERDtree without the dependency!
+" nerdtree without the dependency!
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 2
 let g:netrw_altv = 1
 let g:netrw_winsize = 10
 
-" Go settings
+" go settings
 let g:go_fmt_fail_silently = 0 " let me out even with errors
 
-" Pandoc syntax settings
+" pandoc syntax settings
 let g:pandoc#modules#disabled = [ 'folding' ]
 let g:pandoc#syntax#conceal#urls = 0
 let g:pandoc#syntax#conceal#blacklist = [ 'quotes', 'squotes', 'apostrophe', 'atx', 'codeblock_delim' ]
