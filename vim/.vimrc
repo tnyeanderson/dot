@@ -80,6 +80,19 @@ nnoremap > <C-W>>
 nnoremap + <C-W>+
 nnoremap _ <C-W>-
 
+" toggle checkbox with gc
+function! ToggleCheckbox()
+  let line = getline('.')
+  mark `
+  if match(line, '- \[ \]', 'n') != -1
+    s#- \[ \]#- [x]#
+  elseif match(line, '- \[x\]', 'n') != -1
+    s#- \[x\]#- [ ]#
+  endif
+  normal ``
+endfunction
+noremap <silent> gc :call ToggleCheckbox()<CR>
+
 " toggle relative line numbers with gr
 noremap <silent> gr :RN<CR>
 
