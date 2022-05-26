@@ -2,6 +2,7 @@
 " VIM options
 """"""""""""""""""""
 
+" display tabs as 2 spaces wide
 set tabstop=2
 
 " show line numbers
@@ -54,7 +55,6 @@ endif
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 2
-let g:netrw_altv = 1
 let g:netrw_winsize = 10
 
 " go settings
@@ -63,7 +63,7 @@ let g:go_fmt_fail_silently = 0
 " pandoc syntax settings
 let g:pandoc#modules#disabled = [ 'folding' ]
 let g:pandoc#syntax#conceal#urls = 0
-let g:pandoc#syntax#conceal#blacklist = [ 'quotes', 'squotes', 'apostrophe', 'atx', 'codeblock_delim' ]
+let g:pandoc#syntax#conceal#blacklist = [ 'quotes', 'squotes', 'apostrophe', 'atx', 'codeblock_delim', 'codeblock_start' ]
 let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim', 'go', 'markdown', 'python', 'bash=sh' ]
 
 " gruvbox settings
@@ -99,7 +99,7 @@ noremap <silent> gr :RN<CR>
 " toggle file browser with gz
 nnoremap <silent> gz :Lexplore<CR>
 
-" toggle transparent background
+" toggle transparent background with CTRL+t
 let t:is_transparent = 0
 function! ToggleTransparent()
   if t:is_transparent == 0
