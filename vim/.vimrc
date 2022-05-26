@@ -1,32 +1,54 @@
+""""""""""""""""""""
+" VIM options
+""""""""""""""""""""
+
 set tabstop=2
+
+" show line numbers
 set number
-set nocompatible
+
+" make backspace/delete work as expected (including over new lines)
 set backspace=2
+
+" make sure the background is dark
+" will be reset when using ToggleTransparent
 set background=dark
+
+" set up autoindent, load indent and plugin based on filetype
+set autoindent
+filetype plugin indent on
 
 " yes, I accept the risks
 set noswapfile
 
+""""""""""""""""""""
+" Plugins
+""""""""""""""""""""
+
+" Install vim-plug if not already installed
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
+endif
+
 " only load plugins if Plug detected
 if filereadable(expand("~/.vim/autoload/plug.vim"))
   call plug#begin('~/.vimplugins')
-  Plug 'vim-pandoc/vim-pandoc'
-  Plug 'vim-pandoc/vim-pandoc-syntax'
-  Plug 'pangloss/vim-javascript'
-  Plug 'fatih/vim-go'
-  Plug 'airblade/vim-gitgutter'
-  Plug 'vim-scripts/RltvNmbr.vim'
-  Plug 'morhetz/gruvbox'
+    Plug 'vim-pandoc/vim-pandoc'
+    Plug 'vim-pandoc/vim-pandoc-syntax'
+    Plug 'pangloss/vim-javascript'
+    Plug 'fatih/vim-go'
+    Plug 'airblade/vim-gitgutter'
+    Plug 'vim-scripts/RltvNmbr.vim'
+    Plug 'morhetz/gruvbox'
   call plug#end()
   set updatetime=100
-"  else
-"  " Install vim-plug if not already installed
-"  if empty(glob('~/.vim/autoload/plug.vim'))
-"    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-"      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"    autocmd VimEnter * PlugInstall
-"  endif
 endif
+
+""""""""""""""""""""
+" Plugin configs
+""""""""""""""""""""
 
 " nerdtree without the dependency!
 let g:netrw_banner = 0
@@ -36,7 +58,7 @@ let g:netrw_altv = 1
 let g:netrw_winsize = 10
 
 " go settings
-let g:go_fmt_fail_silently = 0 " let me out even with errors
+let g:go_fmt_fail_silently = 0
 
 " pandoc syntax settings
 let g:pandoc#modules#disabled = [ 'folding' ]
@@ -48,11 +70,21 @@ let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim', 'go', 'markdown', 'python
 colorscheme gruvbox
 let g:gruvbox_italic = 1
 
+""""""""""""""""""""
+" Shortcuts & Maps
+""""""""""""""""""""
+
+" resize windows with <, >, +, _
+nnoremap < <C-W><
+nnoremap > <C-W>>
+nnoremap + <C-W>+
+nnoremap _ <C-W>-
+
 " toggle relative line numbers with gr
-map <silent> gr :RN<CR>
+noremap <silent> gr :RN<CR>
 
 " toggle file browser with gz
-map <silent> gz :Lexplore<CR>
+nnoremap <silent> gz :Lexplore<CR>
 
 " toggle transparent background
 let t:is_transparent = 0
@@ -66,11 +98,5 @@ function! ToggleTransparent()
     let t:is_transparent = 0
   endif
 endfunction
-nnoremap <silent> <C-t> : call ToggleTransparent()<CR>
-
-" resize windows with <. >, +, _
-map < <C-W><
-map > <C-W>>
-map + <C-W>+
-map _ <C-W>-
+nnoremap <silent> <C-t> :call ToggleTransparent()<CR>
 
