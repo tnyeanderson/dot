@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for dir in tmux vim; do
+for dir in scripts tmux vim; do
 	(cd "$dir" && ./setup)
 done
 

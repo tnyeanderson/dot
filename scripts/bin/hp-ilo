@@ -1,0 +1,51 @@
+#!/bin/bash
+
+ILO_URL="https://ilo.mars.galaxy.sc"
+ILO_FIREFOX_DIR="/tmp/ilo-firefox"
+WORKING_DIR="$(pwd)"
+
+if pgrep -f "$ILO_FIREFOX_DIR"; then
+	echo 'Already running. Skipping...'
+	exit
+fi
+
+mkdir -p "$ILO_FIREFOX_DIR"
+cd "$ILO_FIREFOX_DIR" || {
+	echo 'Failed to switch to temporary directory'
+	exit
+}
+
+# This version has the old algos that work with outdated iLO
+wget https://ftp.mozilla.org/pub/firefox/releases/33.0/linux-x86_64/en-US/firefox-33.0.tar.bz2
+tar -xf firefox-33.0.tar.bz2
+
+# Go to unzipped dir
+cd firefox || {
+	echo 'Failed to switch to firefox directory'
+	exit
+}
+mkdir profile
+
+# Disable automatic updates and default browser check
+cat >profile/user.js <<EOF
+user_pref("app.update.enabled", false);
+user_pref("browser.shell.checkDefaultBrowser", false);
+user_pref("browser.startup.page", 0);
+user_pref("startup.homepage_override_url", "$ILO_URL");
+user_pref("startup.homepage_welcome_url", "$ILO_URL");
+user_pref("security.ssl.enable_ocsp_stapling", false);
+user_pref("general.warnOnAboutConfig", false);
+user_pref("browser.tabs.warnOnClose", false);
+EOF
+
+# Run with the custom profile
+# Once closed, remove the temp files
+# Runs in a background subshell
+# Called with absolute path so we can check for it at the beginning
+(
+	"$ILO_FIREFOX_DIR/firefox/firefox" --profile profile >/dev/null 2>&1
+	rm -rf "$ILO_FIREFOX_DIR"
+) &
+
+# Take the user back to where they were
+cd "$WORKING_DIR" || exit

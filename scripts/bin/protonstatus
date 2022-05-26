@@ -1,0 +1,3 @@
+#!/bin/bash
+
+[[ $(sudo protonvpn status | grep Connected) != "" ]] && exit 0 || exit 1
