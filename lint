@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Exit if any commands fail
+# This aborts the commit if used as a git hook
+set -e
+
+only_scripts() {
+	while IFS= read -r line; do
+		firstline=$(head -n 1 "$line")
+		if [[ "$firstline" == '#!/bin/bash' ]] || [[ "$line" =~ .sh$ ]]; then
+			echo "$line"
+		fi
+	done
+}
+
+if [ "$GIT_PRE_COMMIT_HOOK" = true ]; then
+	# If we are running as a pre-commit hook, only check the staged files
+	# If grep has no results, this will fail. Disable -e temporarily.
+	set +e
+	STAGED_FILES="$(git diff --name-only --cached | only_scripts)"
+	set -e
+else
+	# Otherwise, check all shell files
+	STAGED_FILES="$("$GOPATH/bin/shfmt" -f .)"
+fi
+
+if [ -z "$STAGED_FILES" ]; then
+	echo 'No files to check.'
+	exit 0
+fi
+
+# Prettify first in case it affects linting
+echo 'Prettifying...'
+for file in $STAGED_FILES; do
+	# Use shfmt to prettify
+	"$GOPATH/bin/shfmt" -l -w -i 0 "$file"
+	# Add the fixed files back the the staging area
+	# This only happens within the precommit hook, which uses git stash beforehand!
+	if [ "$GIT_PRE_COMMIT_HOOK" = 'true' ]; then
+		git add "$file"
+	fi
+done
+
+# Now lint using shellcheck
+echo 'Linting...'
+for file in $STAGED_FILES; do
+	shellcheck "$file"
+done
