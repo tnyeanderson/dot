@@ -4,3 +4,5 @@ for dir in scripts tmux vim; do
 	(cd "$dir" && ./setup)
 done
 
+echo "Adding git hooks..."
+.githooks/setup-hooks.sh

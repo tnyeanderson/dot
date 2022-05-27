@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Run tests as hook
+GIT_PRE_COMMIT_HOOK=true ./lint
+
+# Check the result of the tests
+RESULT=$?
+
+# Exit with the proper status
+[ "$RESULT" -ne 0 ] && exit 1
+exit 0
