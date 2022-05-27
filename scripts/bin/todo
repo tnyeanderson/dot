@@ -1,0 +1,3 @@
+#!/bin/bash
+
+vi "$HOME/Desktop/TODO.md"

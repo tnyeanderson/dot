@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#
+# Ask a user for confirmation.
+#
+# Usage: userconfirm PROMPT
+#        userconfirm PROMPT && perform_action
+#
+
+[[ "$NOCONFIRM" == true ]] && return 0
+
+PROMPT="Continue?"
+[[ -n "$1" ]] && PROMPT="$1"
+read -rp "$PROMPT (y/N)" yn
+case $yn in
+Y | y)
+	return 0
+	;;
+*)
+	return 1
+	;;
+esac
