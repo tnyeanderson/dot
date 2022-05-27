@@ -2,4 +2,3 @@
 
 ln -s "$(pwd)/.vimrc" "$HOME/.vimrc"
 ln -s "$(pwd)/.selected_editor" "$HOME/.selected_editor"
-
