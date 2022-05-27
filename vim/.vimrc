@@ -113,3 +113,21 @@ function! ToggleTransparent()
 endfunction
 nnoremap <silent> <C-t> :call ToggleTransparent()<CR>
 
+""""""""""""""""""""
+" Functions
+""""""""""""""""""""
+
+" run shfmt command on the current file
+function! RunShfmt()
+  let path = expand('%:p')
+  execute('!shfmt -w ' . path)
+endfunction
+command -nargs=0 Shfmt call RunShfmt()
+
+" run shellcheck command on the current file
+function! RunShellcheck()
+  let path = expand('%:p')
+  execute('!shellcheck ' . path)
+endfunction
+command -nargs=0 Shellcheck call RunShellcheck()
+
