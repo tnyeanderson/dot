@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Calibre doesn't play nice on network drives
-# Sync the local calibre library and database to the shared drive
-rsync -avhP /home/thomas/Books/ /capsule/public/media/books
