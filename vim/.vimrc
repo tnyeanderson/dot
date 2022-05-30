@@ -74,6 +74,19 @@ let g:gruvbox_italic = 1
 " Shortcuts & Maps
 """"""""""""""""""""
 
+" save files using sudo with :W!
+function! WriteSudo(bang)
+  if a:bang != 1
+    echo "Use :W! to save with sudo"
+    return
+  endif
+  silent write !sudo tee >/dev/null %
+  silent edit!
+  redraw!
+  echo @% . " written with sudo"
+endfunction
+command -bang W :execute "call WriteSudo(<bang>0)"
+
 " resize windows with <, >, +, _
 nnoremap < <C-W><
 nnoremap > <C-W>>
