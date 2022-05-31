@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Open a URL provided by stdin
+xdg-open "$(cat -)"
