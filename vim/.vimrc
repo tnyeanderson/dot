@@ -98,9 +98,11 @@ function! ToggleCheckbox()
   let line = getline('.')
   mark `
   if match(line, '- \[ \]', 'n') != -1
-    s#- \[ \]#- [x]#
+    s#\M- [ ]#- [x]#
   elseif match(line, '- \[x\]', 'n') != -1
-    s#- \[x\]#- [ ]#
+    s#\M- [x]#- [ ]#
+  else
+    s#^\(\s*\)\([-\*]\s\)\?#\1- [ ] #e
   endif
   normal ``
 endfunction
