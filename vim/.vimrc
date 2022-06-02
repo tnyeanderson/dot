@@ -135,7 +135,10 @@ nnoremap <silent> <C-t> :call ToggleTransparent()<CR>
 " run shfmt command on the current file
 function! RunShfmt()
   let path = expand('%:p')
-  execute('!shfmt -w ' . path)
+  silent execute('!shfmt -w ' . path)
+  silent edit!
+  redraw!
+  echo @% . " formatted with shfmt"
 endfunction
 command -nargs=0 Shfmt call RunShfmt()
 
