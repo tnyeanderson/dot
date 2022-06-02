@@ -20,6 +20,11 @@ bg_purple='\e[45m'
 bg_cyan='\e[46m'
 bg_lightgray='\e[47m'
 
+# RGB
+# Syntax: \e[38;2;<r>;<g>;<b>m
+fg_rgb='\e[38;2;136;67;255m'
+bg_rgb='\e[48;2;136;67;255m'
+
 # Formats
 bold='\e[1m'
 underline='\e[4m'
@@ -35,32 +40,36 @@ blinking_purple='\e[35;5m'
 endstyle='\e[0m'
 
 # Print all the text colors
-echo -e "${fg_black}black text${endstyle}"
-echo -e "${fg_red}red text${endstyle}"
-echo -e "${fg_green}green text${endstyle}"
-echo -e "${fg_brown}brown text${endstyle}"
-echo -e "${fg_blue}blue text${endstyle}"
-echo -e "${fg_purple}purple text${endstyle}"
-echo -e "${fg_cyan}cyan text${endstyle}"
-echo -e "${fg_lightgray}lightgray text${endstyle}"
+echo -e "${fg_black}30 - black text${endstyle}"
+echo -e "${fg_red}31 - red text${endstyle}"
+echo -e "${fg_green}32 - green text${endstyle}"
+echo -e "${fg_brown}33 - brown text${endstyle}"
+echo -e "${fg_blue}34 - blue text${endstyle}"
+echo -e "${fg_purple}35 - purple text${endstyle}"
+echo -e "${fg_cyan}36 - cyan text${endstyle}"
+echo -e "${fg_lightgray}37 - lightgray text${endstyle}"
 
 # Print all the background colors
-echo -e "${bg_black}black background${endstyle}"
-echo -e "${bg_red}red background${endstyle}"
-echo -e "${bg_green}green background${endstyle}"
-echo -e "${bg_brown}brown background${endstyle}"
-echo -e "${bg_blue}blue background${endstyle}"
-echo -e "${bg_purple}purple background${endstyle}"
-echo -e "${bg_cyan}cyan background${endstyle}"
-echo -e "${bg_lightgray}lightgray background${endstyle}"
+echo -e "${bg_black}40 - black background${endstyle}"
+echo -e "${bg_red}41 - red background${endstyle}"
+echo -e "${bg_green}42 - green background${endstyle}"
+echo -e "${bg_brown}43 - brown background${endstyle}"
+echo -e "${bg_blue}44 - blue background${endstyle}"
+echo -e "${bg_purple}45 - purple background${endstyle}"
+echo -e "${bg_cyan}46 - cyan background${endstyle}"
+echo -e "${bg_lightgray}47 - lightgray background${endstyle}"
+
+# Print RGB tests
+echo -e "${fg_rgb}38;2;136;67;255 - Foreground RGB(136, 67, 255)${endstyle}"
+echo -e "${bg_rgb}48;2;136;67;255 - Background RGB(136, 67, 255)${endstyle}"
 
 # Print all formats
-echo -e "${bold}bold${endstyle}"
-echo -e "${underline}underline${endstyle}"
-echo -e "${blink}blink${endstyle}"
-echo -e "${reverse_video}reverse video${endstyle}"
+echo -e "${bold}1 - bold${endstyle}"
+echo -e "${underline}4 - underline${endstyle}"
+echo -e "${blink}5 - blink${endstyle}"
+echo -e "${reverse_video}7 - reverse video (swap foreground and background)${endstyle}"
 
 # Print some combinations
-echo -e "${bold_underline}bold and underline${endstyle}"
-echo -e "${blue_text_red_bg}blue text and red background${endstyle}"
-echo -e "${blinking_purple}blinking purple text${endstyle}"
+echo -e "${bold_underline}1;4 - bold and underline${endstyle}"
+echo -e "${blue_text_red_bg}34;41 - blue text and red background${endstyle}"
+echo -e "${blinking_purple}35;5 - blinking purple text${endstyle}"
