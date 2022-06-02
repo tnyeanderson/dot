@@ -1,0 +1,35 @@
+#!/bin/bash
+
+read -rd '' USAGE <<EOF
+
+A version of ln which is always verbose, creates softlinks, and treats TARGET as a file.
+If TARGET already exists (but is not the correct link) it is backed up and overwritten.
+
+USAGE: lns SOURCE TARGET
+
+EOF
+
+SOURCE=$1
+TARGET="$(dirname "$2")/$(basename "$2")"
+
+if [[ "$SOURCE" == "--help" ]] || [[ -z "$SOURCE" ]] || [[ -z "$TARGET" ]]; then
+	echo
+	echo "$USAGE"
+	echo
+	exit 1
+fi
+
+TIMESTAMP="$(date '+%Y%m%d%H%M%S')"
+BACKUP="${TARGET}.${TIMESTAMP}"
+
+if [[ -e "$TARGET" ]]; then
+	EXISTING="$(readlink "$TARGET")"
+	if [[ -L "$TARGET" ]] && [[ "$EXISTING" == "$SOURCE" ]]; then
+		echo "$TARGET link is already correct. Skipping..."
+		exit
+	fi
+	mv "$TARGET" "$BACKUP"
+	echo "Existing $TARGET was backed up to $BACKUP"
+fi
+
+ln -sv "$SOURCE" "$TARGET"
