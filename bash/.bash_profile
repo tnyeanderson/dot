@@ -28,7 +28,7 @@ set -o vi
 export GITDIR="$HOME/Desktop/git"
 export ZETDIR="$GITDIR/zet"
 export DOTDIR="$GITDIR/dot"
-export TODOFILE="$HOME/Desktop/todo.md"
+export TODOFILE="$HOME/Desktop/TODO.md"
 
 # ----------------------------------------------------
 # EDITOR
