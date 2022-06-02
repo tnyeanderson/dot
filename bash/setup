@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [[ -f "$HOME/.bash_profile" ]] && [[ ! -e "$HOME/.bash_profile.local" ]]; then
+	mv "$HOME/.bash_profile" "$HOME/.bash_profile.local"
+	echo "Existing .bash_profile was moved to .bash_profile.local"
+fi
+
+ln -sT "$(pwd)/.bash_profile" "$HOME/.bash_profile"
