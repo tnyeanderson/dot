@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# Foreground (text styles)
+fg_black='\e[30m'
+fg_red='\e[31m'
+fg_green='\e[32m'
+fg_brown='\e[33m'
+fg_blue='\e[34m'
+fg_purple='\e[35m'
+fg_cyan='\e[36m'
+fg_lightgray='\e[37m'
+
+# Background
+bg_black='\e[40m'
+bg_red='\e[41m'
+bg_green='\e[42m'
+bg_brown='\e[43m'
+bg_blue='\e[44m'
+bg_purple='\e[45m'
+bg_cyan='\e[46m'
+bg_lightgray='\e[47m'
+
+# Formats
+bold='\e[1m'
+underline='\e[4m'
+blink='\e[5m'
+reverse_video='\e[7m'
+
+# Combinations
+bold_underline='\e[1;4m'
+blue_text_red_bg='\e[34;41m'
+blinking_purple='\e[35;5m'
+
+# End all styles
+endstyle='\e[0m'
+
+# Print all the text colors
+echo -e "${fg_black}black text${endstyle}"
+echo -e "${fg_red}red text${endstyle}"
+echo -e "${fg_green}green text${endstyle}"
+echo -e "${fg_brown}brown text${endstyle}"
+echo -e "${fg_blue}blue text${endstyle}"
+echo -e "${fg_purple}purple text${endstyle}"
+echo -e "${fg_cyan}cyan text${endstyle}"
+echo -e "${fg_lightgray}lightgray text${endstyle}"
+
+# Print all the background colors
+echo -e "${bg_black}black background${endstyle}"
+echo -e "${bg_red}red background${endstyle}"
+echo -e "${bg_green}green background${endstyle}"
+echo -e "${bg_brown}brown background${endstyle}"
+echo -e "${bg_blue}blue background${endstyle}"
+echo -e "${bg_purple}purple background${endstyle}"
+echo -e "${bg_cyan}cyan background${endstyle}"
+echo -e "${bg_lightgray}lightgray background${endstyle}"
+
+# Print all formats
+echo -e "${bold}bold${endstyle}"
+echo -e "${underline}underline${endstyle}"
+echo -e "${blink}blink${endstyle}"
+echo -e "${reverse_video}reverse video${endstyle}"
+
+# Print some combinations
+echo -e "${bold_underline}bold and underline${endstyle}"
+echo -e "${blue_text_red_bg}blue text and red background${endstyle}"
+echo -e "${blinking_purple}blinking purple text${endstyle}"
