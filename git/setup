@@ -1,3 +1,5 @@
 #!/bin/bash
 
-ln -sT "$(pwd)/.gitconfig" "$HOME/.gitconfig"
+BINDIR='../scripts/bin'
+
+"$BINDIR/lns" "$(pwd)/.gitconfig" "$HOME/.gitconfig"

@@ -1,4 +1,6 @@
 #!/bin/bash
 
-ln -sT "$(pwd)/.vimrc" "$HOME/.vimrc"
-ln -sT "$(pwd)/.selected_editor" "$HOME/.selected_editor"
+BINDIR='../scripts/bin'
+
+"$BINDIR/lns" "$(pwd)/.vimrc" "$HOME/.vimrc"
+"$BINDIR/lns" "$(pwd)/.selected_editor" "$HOME/.selected_editor"

@@ -1,3 +1,5 @@
 #!/bin/bash
 
-ln -sT "$(pwd)/bin" "$HOME/bin"
+BINDIR='./bin'
+
+"$BINDIR/lns" "$(pwd)/bin" "$HOME/bin"
