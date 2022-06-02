@@ -1,4 +1,4 @@
 #!/bin/bash
 
-ln -s "$(pwd)/.vimrc" "$HOME/.vimrc"
-ln -s "$(pwd)/.selected_editor" "$HOME/.selected_editor"
+ln -sT "$(pwd)/.vimrc" "$HOME/.vimrc"
+ln -sT "$(pwd)/.selected_editor" "$HOME/.selected_editor"
