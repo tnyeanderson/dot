@@ -39,6 +39,7 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
     Plug 'vim-pandoc/vim-pandoc'
     Plug 'vim-pandoc/vim-pandoc-syntax'
     Plug 'pangloss/vim-javascript'
+    Plug 'itspriddle/vim-shellcheck'
     Plug 'fatih/vim-go'
     Plug 'airblade/vim-gitgutter'
     Plug 'vim-scripts/RltvNmbr.vim'
@@ -135,17 +136,10 @@ nnoremap <silent> <C-t> :call ToggleTransparent()<CR>
 " run shfmt command on the current file
 function! RunShfmt()
   let path = expand('%:p')
-  silent execute('!shfmt -w ' . path)
+  silent execute('!shfmt -w ' . shellescape(path))
   silent edit!
   redraw!
   echo @% . " formatted with shfmt"
 endfunction
 command -nargs=0 Shfmt call RunShfmt()
-
-" run shellcheck command on the current file
-function! RunShellcheck()
-  let path = expand('%:p')
-  execute('!shellcheck ' . path)
-endfunction
-command -nargs=0 Shellcheck call RunShellcheck()
 
