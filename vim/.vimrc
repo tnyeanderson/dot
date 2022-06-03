@@ -130,7 +130,7 @@ endfunction
 nnoremap <silent> <C-t> :call ToggleTransparent()<CR>
 
 """"""""""""""""""""
-" Functions
+" Commands
 """"""""""""""""""""
 
 " run shfmt command on the current file
@@ -139,7 +139,11 @@ function! RunShfmt()
   silent execute('!shfmt -w ' . shellescape(path))
   silent edit!
   redraw!
-  echo @% . " formatted with shfmt"
+  if v:shell_error == 0
+    echo @% . " formatted with shfmt"
+  else
+    echo "ERROR: shfmt failed"
+  endif
 endfunction
 command -nargs=0 Shfmt call RunShfmt()
 
