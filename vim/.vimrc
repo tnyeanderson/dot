@@ -136,13 +136,16 @@ nnoremap <silent> <C-t> :call ToggleTransparent()<CR>
 " run shfmt command on the current file
 function! RunShfmt()
   let path = expand('%:p')
-  silent execute('!shfmt -w ' . shellescape(path))
-  silent edit!
+  silent! let output = system('shfmt -w ' . shellescape(path))
+  silent! edit!
   redraw!
   if v:shell_error == 0
     echo @% . " formatted with shfmt"
   else
-    echo "ERROR: shfmt failed"
+    silent! botright 10new
+    silent! put =output
+    setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile nomodifiable
+    execute("file shfmt exited with error code: " . v:shell_error)
   endif
 endfunction
 command -nargs=0 Shfmt call RunShfmt()
