@@ -5,6 +5,9 @@
 # This file is managed by git
 # Do not modify directly
 #
+# Make local changes in:
+#   ~/.bash_profile.local
+#
 # https://github.com/tnyeanderson/dot
 #
 #####################################
@@ -106,5 +109,6 @@ export GROFF_NO_SGR=1              # for konsole and gnome-terminal
 # Source local profile
 # ----------------------------------------------------
 
+# Local changes and overrides should be made in ~/.bash_profile.local
 # shellcheck disable=SC1090
 [[ -f "$HOME/.bash_profile.local" ]] && source "$HOME/.bash_profile.local"
