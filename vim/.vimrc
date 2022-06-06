@@ -38,10 +38,9 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
   call plug#begin('~/.vimplugins')
     Plug 'vim-pandoc/vim-pandoc'
     Plug 'vim-pandoc/vim-pandoc-syntax'
-    Plug 'pangloss/vim-javascript'
-    Plug 'itspriddle/vim-shellcheck'
     Plug 'fatih/vim-go'
     Plug 'airblade/vim-gitgutter'
+    Plug 'tpope/vim-dispatch'
     Plug 'vim-scripts/RltvNmbr.vim'
     Plug 'morhetz/gruvbox'
   call plug#end()
@@ -94,15 +93,18 @@ nnoremap > <C-W>>
 nnoremap + <C-W>+
 nnoremap _ <C-W>-
 
-" toggle checkbox with gc
+" toggle markdown checkbox with gc
 function! ToggleCheckbox()
   let line = getline('.')
   mark `
   if match(line, '- \[ \]', 'n') != -1
+    " check box
     s#\M- [ ]#- [x]#
   elseif match(line, '- \[x\]', 'n') != -1
+    " uncheck box
     s#\M- [x]#- [ ]#
   else
+    " create box
     s#^\(\s*\)\([-\*]\s\)\?#\1- [ ] #e
   endif
   normal ``
@@ -130,23 +132,25 @@ endfunction
 nnoremap <silent> <C-t> :call ToggleTransparent()<CR>
 
 """"""""""""""""""""
-" Commands
+" Autocommands
 """"""""""""""""""""
 
-" run shfmt command on the current file
-function! RunShfmt()
-  let path = expand('%:p')
-  silent! let output = system('shfmt -w ' . shellescape(path))
-  silent! edit!
-  redraw!
-  if v:shell_error == 0
-    echo @% . " formatted with shfmt"
-  else
-    silent! botright 10new
-    silent! put =output
-    setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile nomodifiable
-    execute("file shfmt exited with error code: " . v:shell_error)
+function OnOpenBash()
+  " :make should run shfmt and shellcheck
+  setlocal makeprg=shfmt\ -w\ %\ &&\ shellcheck\ -f\ gcc\ %
+  " shfmt errors
+  setlocal errorformat^=%f:\ %o:%l:%c:\ %m
+endfunction
+
+function OnOpen()
+  if getline(1) == "#!/bin/bash"
+    call OnOpenBash()
   endif
 endfunction
-command -nargs=0 Shfmt call RunShfmt()
+
+augroup vimrc
+  " Remove all vimrc autocommands
+  autocmd!
+  autocmd BufRead,BufNewFile * call OnOpen()
+augroup END
 
