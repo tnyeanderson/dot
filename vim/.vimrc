@@ -142,6 +142,14 @@ function OnOpenBash()
   setlocal errorformat^=%f:\ %o:%l:%c:\ %m
 endfunction
 
+function OnOpenMarkdown()
+  setlocal expandtab
+endfunction
+
+function OnOpenVimrc()
+  setlocal expandtab
+endfunction
+
 function OnOpen()
   if getline(1) == "#!/bin/bash"
     call OnOpenBash()
@@ -152,5 +160,7 @@ augroup vimrc
   " Remove all vimrc autocommands
   autocmd!
   autocmd BufRead,BufNewFile * call OnOpen()
+  autocmd BufRead,BufNewFile *.md call OnOpenMarkdown()
+  autocmd BufRead,BufNewFile .vimrc call OnOpenVimrc()
 augroup END
 
