@@ -1,4 +1,4 @@
-# Bash
+# bash
 
 Set up a sane bash environment.
 

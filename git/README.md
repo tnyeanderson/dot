@@ -1,4 +1,4 @@
-# Git
+# git
 
 > NOTE: The `setup` script here is not run by the root `setup` script. It must
 > be run ad hoc.

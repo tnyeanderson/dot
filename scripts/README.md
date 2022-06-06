@@ -1,4 +1,4 @@
-# Scripts
+# scripts
 
 This is where useful scripts hide:
 
