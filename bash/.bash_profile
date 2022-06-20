@@ -24,6 +24,9 @@ tabs -2
 # Hint: use Esc+v to open $EDITOR with the current command!
 set -o vi
 
+# Expand dir names from variables using tab complete
+shopt -s direxpand
+
 # ----------------------------------------------------
 # CUSTOM
 # ----------------------------------------------------
