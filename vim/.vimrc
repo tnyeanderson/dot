@@ -22,6 +22,9 @@ filetype plugin indent on
 " yes, I accept the risks
 set noswapfile
 
+" allow using the mouse
+set mouse=a
+
 """"""""""""""""""""
 " Plugins
 """"""""""""""""""""
@@ -63,7 +66,7 @@ let g:go_fmt_fail_silently = 0
 " pandoc syntax settings
 let g:pandoc#modules#disabled = [ 'folding' ]
 let g:pandoc#syntax#conceal#urls = 0
-let g:pandoc#syntax#conceal#blacklist = [ 'quotes', 'squotes', 'apostrophe', 'atx', 'codeblock_delim', 'codeblock_start' ]
+let g:pandoc#syntax#conceal#blacklist = [ 'inlinemath', 'ellipses', 'quotes', 'squotes', 'apostrophe', 'atx', 'codeblock_delim', 'codeblock_start' ]
 let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim', 'go', 'markdown', 'python', 'bash=sh' ]
 
 " gruvbox settings
