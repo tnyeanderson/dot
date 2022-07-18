@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TERMINFO_SRC_URL='https://raw.githubusercontent.com/mirror/ncurses/master/misc/terminfo.src'
+TERMINFO_SRC="$(mktemp -t terminfo.src-XXX)"
+
+if ! command -v tic &>/dev/null; then
+	echo 'ERROR: tic command not found. Exiting...'
+	exit 1
+fi
+
+# Download terminfo.src
+curl -o "$TERMINFO_SRC" "$TERMINFO_SRC_URL"
+
+echo '===== Installing tmux-256color to ~/.terminfo ====='
+tic -o "$HOME/.terminfo" -xe tmux-256color "$TERMINFO_SRC"
