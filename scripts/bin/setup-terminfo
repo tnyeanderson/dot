@@ -11,5 +11,9 @@ fi
 # Download terminfo.src
 curl -o "$TERMINFO_SRC" "$TERMINFO_SRC_URL"
 
+# Compile terminfo for tmux-256color
 echo '===== Installing tmux-256color to ~/.terminfo ====='
 tic -o "$HOME/.terminfo" -xe tmux-256color "$TERMINFO_SRC"
+
+# Remove terminfo.src temp file
+rm "$TERMINFO_SRC"
