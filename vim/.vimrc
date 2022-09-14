@@ -25,6 +25,9 @@ set noswapfile
 " allow using the mouse
 set mouse=a
 
+" <leader> key for custom commands
+let mapleader = ","
+
 """"""""""""""""""""
 " Plugins
 """"""""""""""""""""
@@ -112,13 +115,13 @@ function! ToggleCheckbox()
   endif
   normal ``
 endfunction
-noremap <silent> gc :call ToggleCheckbox()<CR>
+noremap <silent> <leader>c :call ToggleCheckbox()<CR>
 
 " toggle relative line numbers with gr
-noremap <silent> gr :RN<CR>
+noremap <silent> <leader>r :RN<CR>
 
 " toggle file browser with gz
-nnoremap <silent> gz :Lexplore<CR>
+nnoremap <silent> <leader>z :Lexplore<CR>
 
 " toggle transparent background with CTRL+t
 let t:is_transparent = 0
