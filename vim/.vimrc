@@ -25,9 +25,6 @@ set noswapfile
 " allow using the mouse
 set mouse=a
 
-" <leader> key for custom commands
-let mapleader = ","
-
 """"""""""""""""""""
 " Plugins
 """"""""""""""""""""
@@ -80,6 +77,9 @@ let g:gruvbox_italic = 1
 " Shortcuts & Maps
 """"""""""""""""""""
 
+" <leader> key for custom commands
+let mapleader = ","
+
 " save files using sudo with :W!
 function! WriteSudo(bang)
   if a:bang != 1
@@ -98,6 +98,9 @@ nnoremap < <C-W><
 nnoremap > <C-W>>
 nnoremap + <C-W>+
 nnoremap _ <C-W>-
+
+" show go documentation for word under cursor
+noremap <silent> <leader>d :GoDoc<CR>
 
 " toggle markdown checkbox with gc
 function! ToggleCheckbox()
