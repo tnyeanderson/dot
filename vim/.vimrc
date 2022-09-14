@@ -99,10 +99,10 @@ nnoremap > <C-W>>
 nnoremap + <C-W>+
 nnoremap _ <C-W>-
 
-" show go documentation for word under cursor
+" show go documentation for word under cursor with <leader>d
 noremap <silent> <leader>d :GoDoc<CR>
 
-" toggle markdown checkbox with gc
+" toggle markdown checkbox with <leader>c
 function! ToggleCheckbox()
   let line = getline('.')
   mark `
@@ -120,10 +120,10 @@ function! ToggleCheckbox()
 endfunction
 noremap <silent> <leader>c :call ToggleCheckbox()<CR>
 
-" toggle relative line numbers with gr
+" toggle relative line numbers with <leader>r
 noremap <silent> <leader>r :RN<CR>
 
-" toggle file browser with gz
+" toggle file browser  with <leader>z
 nnoremap <silent> <leader>z :Lexplore<CR>
 
 " toggle transparent background with CTRL+t
