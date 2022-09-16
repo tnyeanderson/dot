@@ -173,7 +173,7 @@ function OnOpenVimrc()
 endfunction
 
 function OnOpen()
-  if getline(1) == "#!/bin/bash"
+  if getline(1) =~ '#!/bin/\%[ba]sh'
     call OnOpenBash()
   endif
 endfunction
