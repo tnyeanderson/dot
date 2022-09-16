@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ -z "$DOTDIR" ]]; then
+	echo 'ERROR: Environment variable DOTDIR required'
+	exit 1
+fi
+
+# Perform work in a subshell to not affect working dir
+(cd "$DOTDIR" && git pull)
