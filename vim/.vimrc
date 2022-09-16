@@ -140,6 +140,19 @@ function! ToggleTransparent()
 endfunction
 nnoremap <silent> <C-t> :call ToggleTransparent()<CR>
 
+" toggle paste mode with <leader>p
+function! TogglePasteMode()
+  if(&paste == 0)
+    set paste
+    echo ":set paste"
+  else
+    set nopaste
+    echo ":set nopaste"
+  endif
+endfunction
+map <leader>p :call TogglePasteMode()<cr>
+
+
 """"""""""""""""""""
 " Autocommands
 """"""""""""""""""""
