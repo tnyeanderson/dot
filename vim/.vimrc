@@ -99,9 +99,6 @@ nnoremap > <C-W>>
 nnoremap + <C-W>+
 nnoremap _ <C-W>-
 
-" show go documentation for word under cursor with <leader>d
-noremap <silent> <leader>d :GoDoc<CR>
-
 " toggle markdown checkbox with <leader>c
 function! ToggleCheckbox()
   let line = getline('.')
