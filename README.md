@@ -16,6 +16,8 @@ See each folder's `README.md` file for more information.
 
 ## Contributions
 
-`shfmt` and `shellcheck` are run as git commit hooks for all shell scripts in
-the repo.
+Set up the hooks before contributing:
+```bash
+.githooks/setup
+```
 
