@@ -1,0 +1,9 @@
+#!/bin/bash
+
+compose='docker compose'
+
+# Use the alias (or v1) if it is set for compatibility
+# TODO: This will be deprecated soon
+command -v docker-compose >/dev/null && compose=docker-compose
+
+$compose "$@"
