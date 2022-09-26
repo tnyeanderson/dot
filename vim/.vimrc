@@ -80,6 +80,12 @@ let g:gruvbox_italic = 1
 " <leader> key for custom commands
 let mapleader = ","
 
+" toggle line numbers with <leader>n
+nnoremap <leader>n :set number!<CR>
+
+" clear highlighting from last search with <leader>h
+nnoremap <leader>h :nohlsearch<CR>
+
 " save files using sudo with :W!
 function! WriteSudo(bang)
   if a:bang != 1
