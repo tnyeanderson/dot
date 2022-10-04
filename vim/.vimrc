@@ -175,6 +175,10 @@ function OnOpenVimrc()
   setlocal expandtab
 endfunction
 
+function OnOpenYaml()
+  setlocal tabstop=2 shiftwidth=2 expandtab filetype=yaml foldmethod=indent nofoldenable
+endfunction
+
 function OnOpen()
   if getline(1) =~ '#!/bin/\%[ba]sh'
     call OnOpenBash()
@@ -186,6 +190,7 @@ augroup vimrc
   autocmd!
   autocmd BufRead,BufNewFile * call OnOpen()
   autocmd BufRead,BufNewFile *.md call OnOpenMarkdown()
+  autocmd BufRead,BufNewFile *.{yml,yaml} call OnOpenYaml()
   autocmd BufRead,BufNewFile .vimrc call OnOpenVimrc()
 augroup END
 
