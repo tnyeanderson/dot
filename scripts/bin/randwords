@@ -1,0 +1,53 @@
+#!/bin/bash
+
+delimiter='\n'
+num_words=1
+
+declare -a words
+
+generate_random_word() {
+	grep '^[abcdefghijklmnopqrstuvwxyz]*$' /usr/share/dict/words | shuf -n 1
+}
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	-d | --delimiter)
+		delimiter=$2
+		shift 2
+		;;
+	-n | --no-trailing-newline)
+		no_trailing_newline=0
+		shift
+		;;
+	-*)
+		echo "Unknown option: $1"
+		exit 1
+		;;
+	*)
+		num_words=$1
+		shift
+		;;
+	esac
+done
+
+while [[ $num_words -gt 0 ]]; do
+	word="$(generate_random_word)"
+	words+=("$word")
+	((num_words--))
+done
+
+# Print first word
+printf '%s' "${words[0]}"
+unset 'words[0]'
+
+# Print the rest of the words with delimiters
+for word in "${words[@]}"; do
+	# Use echo because printf with the delimiter will cause shellcheck error
+	# Resolving the shellcheck error results in misprinted newlines
+	printf '%b%s' "$delimiter" "$word"
+done
+
+# Trailing newline
+if [[ -z "$no_trailing_newline" ]]; then
+	printf '\n'
+fi
