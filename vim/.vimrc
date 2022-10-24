@@ -3,7 +3,7 @@
 """"""""""""""""""""
 
 " display tabs as 2 spaces wide
-set tabstop=2
+set tabstop=2 shiftwidth=2
 
 " show line numbers
 set number
