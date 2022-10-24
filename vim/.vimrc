@@ -180,8 +180,12 @@ function OnOpenYaml()
 endfunction
 
 function OnOpen()
-  if getline(1) =~ '#!/bin/\%[ba]sh'
+  let firstline = getline(1)
+  if firstline =~ '#!/bin/\%[ba]sh'
     call OnOpenBash()
+  endif
+  if firstline =~ '#cloud-config'
+    call OnOpenYaml()
   endif
 endfunction
 
