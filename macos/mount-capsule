@@ -45,9 +45,7 @@ setup_mount_target() {
 		exit 1
 	fi
 	mkdir -p "$share_dir"
-	chown "$USER" "$base_dir"
 	chown "$USER" "$share_dir"
-	chmod u+rw "$base_dir"
 	chmod u+rw "$share_dir"
 }
 
@@ -70,6 +68,8 @@ setup_synthetic_links() {
 	# New MacOS filesystems are read-only
 	# /capsule has to be synthetically linked to work
 	sudo mkdir "$synthetic_dir"
+	chown "$USER" "$synthetic_dir"
+	chmod u+rw "$synthetic_dir"
 	sudo touch "$synthetic_conf"
 	echo -e "capsule\t$synthetic_dir" | sudo tee "$synthetic_conf" >/dev/null
 	sudo chown root:wheel "$synthetic_conf"
