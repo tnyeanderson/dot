@@ -71,7 +71,7 @@ setup_synthetic_links() {
 	# /capsule has to be synthetically linked to work
 	sudo mkdir "$synthetic_dir"
 	sudo touch "$synthetic_conf"
-	echo -e "$base_dir\t$synthetic_dir" | sudo tee "$synthetic_conf" >/dev/null
+	echo -e "capsule\t$synthetic_dir" | sudo tee "$synthetic_conf" >/dev/null
 	sudo chown root:wheel "$synthetic_conf"
 	sudo chmod 0644 "$synthetic_conf"
 	sudo /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
