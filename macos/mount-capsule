@@ -68,8 +68,8 @@ setup_synthetic_links() {
 	# New MacOS filesystems are read-only
 	# /capsule has to be synthetically linked to work
 	sudo mkdir "$synthetic_dir"
-	chown "$USER" "$synthetic_dir"
-	chmod u+rw "$synthetic_dir"
+	sudo chown "$USER" "$synthetic_dir"
+	sudo chmod u+rw "$synthetic_dir"
 	sudo touch "$synthetic_conf"
 	echo -e "capsule\t$synthetic_dir" | sudo tee "$synthetic_conf" >/dev/null
 	sudo chown root:wheel "$synthetic_conf"
