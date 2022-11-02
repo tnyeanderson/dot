@@ -1,0 +1,39 @@
+#!/bin/bash
+
+command=$1
+repo=$2
+
+BORG_PASSCOMMAND="cat $HOME/.borgpass"
+export BORG_PASSCOMMAND
+
+get_archives() {
+	borg list "$repo" --format='{name} '
+}
+
+get_files() {
+	local archive
+	archive=$1
+	borg --consider-part-files list "$repo::$archive" --format='{dcsize} {path}{NEWLINE}'
+}
+
+get_info() {
+	local archive
+	archive=$1
+	borg info "$repo::$archive"
+}
+
+for archive in $(get_archives); do
+	case "$command" in
+	files)
+		get_files "$archive"
+		;;
+	info)
+		get_info "$archive"
+		;;
+	*)
+		echo "ERROR: Unrecognized command: $command" >&2
+		echo "Available commands: files, info" >&2
+		exit 1
+		;;
+	esac
+done
