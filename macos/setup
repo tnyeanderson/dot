@@ -11,36 +11,44 @@ if [[ "$(uname -s)" != Darwin ]]; then
 	exit 1
 fi
 
-###########################################
-# Packages
-
-# Install brew
-if ! command -v brew >/dev/null; then
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-
-# Install basic tools
-brew install bash gpg stats vim
-
-# Install applications
-brew install --cask bitwarden
-brew install --cask firefox
-brew install --cask gimp
-brew install --cask hiddenbar
-brew install --cask libreoffice
-brew install --cask lulu
-brew install --cask keepingyouawake
-brew install --cask openvpn-connect
-brew install --cask protonvpn
-brew install --cask rectangle
-brew install --cask signal
-brew install --cask vlc
+current_hostname="$(scutil --set ComputerName "$hostname")"
+read -rp "Enter computer name (hostname) or leave blank to keep as-is [$current_hostname]: " hostname
 
 ###########################################
 # Configure system
 
 # Best reference ever:
 # https://github.com/mathiasbynens/dotfiles/blob/main/.macos
+
+# Set computer name (as done via System Preferences → Sharing)
+if [[ -n "$hostname" ]]; then
+	sudo scutil --set ComputerName "$hostname"
+	sudo scutil --set HostName "$hostname"
+	sudo scutil --set LocalHostName "$hostname"
+	sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$hostname"
+fi
+
+# Disable the sound effects on boot
+sudo nvram SystemAudioVolume=" "
+
+# Expand save panel by default
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+# Disable automatic capitalization as it’s annoying when typing code
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+
+# Disable smart dashes as they’re annoying when typing code
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+# Disable automatic period substitution as it’s annoying when typing code
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+
+# Disable smart quotes as they’re annoying when typing code
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+
+# Disable auto-correct
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 # Disable auto-sleep
 sudo pmset -a displaysleep 0 sleep 0
@@ -109,3 +117,28 @@ chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
 # Restart apps to apply configuration
 killall Dock
 killall Finder
+
+###########################################
+# Packages
+
+# Install brew
+if ! command -v brew >/dev/null; then
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Install basic tools
+brew install bash gpg stats vim
+
+# Install applications
+brew install --cask bitwarden
+brew install --cask firefox
+brew install --cask gimp
+brew install --cask hiddenbar
+brew install --cask libreoffice
+brew install --cask lulu
+brew install --cask keepingyouawake
+brew install --cask openvpn-connect
+brew install --cask protonvpn
+brew install --cask rectangle
+brew install --cask signal
+brew install --cask vlc
