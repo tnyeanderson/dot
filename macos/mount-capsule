@@ -1,0 +1,81 @@
+#!/bin/bash
+
+conf="$HOME/Library/Preferences/nsmb.conf"
+host=capsule.galaxy.sc
+shares='public private'
+base_dir=/capsule
+
+mount_capsule() {
+	local share
+	share=$1
+	mount_smbfs -N "//$host/$share" "$base_dir/$share"
+}
+
+unmount_capsule() {
+	local share
+	share=$1
+	umount "$base_dir/$share"
+}
+
+is_mounted() {
+	local share
+	share=$1
+	# Not the most reliable way, but should work here
+	mount | grep "$base_dir/$share"
+}
+
+is_empty() {
+	local dir
+	dir=$1
+	[[ -z "$(ls -A "$dir")" ]]
+}
+
+setup_mount_target() {
+	local share
+	share=$1
+	share_dir="$base_dir/$share"
+	if is_mounted "$share"; then
+		unmount_capsule "$share"
+	fi
+	if ! is_empty "$share_dir"; then
+		echo "ERROR: Even after attempting to unmount, $share_dir is empty"
+		echo "ERROR: Failed to set up $share_dir"
+		exit 1
+	fi
+	mkdir -p "$share_dir"
+	chown "$USER" "$base_dir"
+	chown "$USER" "$share_dir"
+	chmod u+rw "$base_dir"
+	chmod u+rw "$share_dir"
+}
+
+create_conf() {
+	read -rp "Samba user: " user
+	read -rsp "Samba password: " password
+	cat >"$conf" <<-EOF
+		[default]
+		dir_cache_off=yes
+
+		[$host]
+		username=$user
+		password=$password
+	EOF
+	chmod 400 "$conf"
+	unset user password
+}
+
+# Create the config file if needed
+if [[ ! -f "$conf" ]]; then
+	create_conf
+fi
+
+# Mount everything
+for share in $shares; do
+	# Set up the mount target dir for the share
+	setup_mount_target "$share"
+
+	# Mount the share
+	if ! is_mounted "$share"; then
+		mount_capsule "$share"
+	fi
+done
