@@ -55,6 +55,7 @@ create_conf() {
 	cat >"$conf" <<-EOF
 		[default]
 		dir_cache_off=yes
+		protocol_vers_map=2
 
 		[$host]
 		username=$user
