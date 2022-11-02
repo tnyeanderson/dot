@@ -11,6 +11,7 @@ below) and can be used to completely set up a new system.
 
 `setup` scripts **not** run by root `setup`:
 - `git/setup`
+- `macos/setup`
 
 See each folder's `README.md` file for more information.
 

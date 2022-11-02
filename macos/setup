@@ -1,0 +1,106 @@
+#!/bin/bash
+
+###########################################
+# Prerequisites
+
+# Exit if not on MacOS
+if [[ "$(uname -s)" != Darwin ]]; then
+	echo "This script should only be run on a MacOS system!"
+	exit 1
+fi
+
+###########################################
+# Packages
+
+# Install brew
+if ! command -v brew >/dev/null; then
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Install basic tools
+brew install bash gpg stats vim
+
+# Install applications
+brew install --cask bitwarden
+brew install --cask firefox
+brew install --cask gimp
+brew install --cask hiddenbar
+brew install --cask libreoffice
+brew install --cask lulu
+brew install --cask keepingyouawake
+brew install --cask openvpn-connect
+brew install --cask protonvpn
+brew install --cask rectangle
+brew install --cask signal
+brew install --cask vlc
+
+###########################################
+# Configure system
+
+# Best reference ever:
+# https://github.com/mathiasbynens/dotfiles/blob/main/.macos
+
+# Disable auto-sleep
+sudo pmset -a displaysleep 0 sleep 0
+
+# Disable creation of .DS_Store files on network/usb shares
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool TRUE
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool TRUE
+
+# Set the icon size of Dock items to 36 pixels
+defaults write com.apple.dock tilesize -int 36
+
+# Don’t automatically rearrange Spaces based on most recent use
+defaults write com.apple.dock mru-spaces -bool false
+
+# Automatically hide and show the Dock
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide-delay -float 1
+
+# Hot corners
+# Possible values:
+#  0: no-op
+#  2: Mission Control
+#  3: Show application windows
+#  4: Desktop
+#  5: Start screen saver
+#  6: Disable screen saver
+#  7: Dashboard
+# 10: Put display to sleep
+# 11: Launchpad
+# 12: Notification Center
+# 13: Lock Screen
+# Top left
+defaults write com.apple.dock wvous-tl-corner -int 4
+defaults write com.apple.dock wvous-tl-modifier -int 0
+# Top right
+defaults write com.apple.dock wvous-tr-corner -int 4
+defaults write com.apple.dock wvous-tr-modifier -int 0
+# Bottom left
+defaults write com.apple.dock wvous-bl-corner -int 5
+defaults write com.apple.dock wvous-bl-modifier -int 0
+
+# Require password immediately after sleep or screen saver begins
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+# Save screenshots to the desktop
+defaults write com.apple.screencapture location -string "${HOME}/Desktop"
+
+# Disable shadow in screenshots
+defaults write com.apple.screencapture disable-shadow -bool true
+
+# Set Desktop as the default location for new Finder windows
+# For other paths, use `PfLo` and `file:///full/path/here/`
+defaults write com.apple.finder NewWindowTarget -string "PfDe"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/"
+
+# Finder: show all filename extensions
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+# Show the ~/Library folder
+chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
+
+# Restart apps to apply configuration
+killall Dock
+killall Finder
