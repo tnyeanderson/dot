@@ -3,27 +3,29 @@
 conf="$HOME/Library/Preferences/nsmb.conf"
 synthetic_conf=/etc/synthetic.conf
 host=capsule.galaxy.sc
+user=thomas
 shares='public private'
 base_dir=/capsule
 synthetic_dir=/System/Volumes/Data/capsule
 
 mount_capsule() {
-	local share
+	local share password
 	share=$1
-	mount_smbfs -N "//$host/$share" "$base_dir/$share"
+	password=$2
+	mount_smbfs "//${user}:${password}@${host}/${share}" "$base_dir/$share"
 }
 
 unmount_capsule() {
 	local share
 	share=$1
-	umount "$base_dir/$share"
+	umount "$base_dir/$share" >/dev/null
 }
 
 is_mounted() {
 	local share
 	share=$1
 	# Not the most reliable way, but should work here
-	mount | grep "$base_dir/$share"
+	mount | grep "$base_dir/$share" >/dev/null
 }
 
 is_empty() {
@@ -36,6 +38,7 @@ setup_mount_target() {
 	local share
 	share=$1
 	share_dir="$base_dir/$share"
+	mkdir -p "$share_dir"
 	if is_mounted "$share"; then
 		unmount_capsule "$share"
 	fi
@@ -44,25 +47,26 @@ setup_mount_target() {
 		echo "ERROR: Failed to set up $share_dir"
 		exit 1
 	fi
-	mkdir -p "$share_dir"
 	chown "$USER" "$share_dir"
 	chmod u+rw "$share_dir"
 }
 
 create_conf() {
-	read -rp "Samba user: " user
-	read -rsp "Samba password: " password
 	cat >"$conf" <<-EOF
 		[default]
-		dir_cache_off=yes
-		protocol_vers_map=2
-
-		[$host]
-		username=$user
-		password=$password
+		max_dirs_cached=0
 	EOF
 	chmod 400 "$conf"
-	unset user password
+}
+
+get_password() {
+	security find-generic-password -a "$user" -s capsule -w 2>/dev/null
+}
+
+set_password() {
+	read -rsp "Samba password: " password
+	security add-generic-password -a "$user" -s capsule -w "$password"
+	unset password
 }
 
 setup_synthetic_links() {
@@ -88,6 +92,13 @@ if [[ ! -f "$synthetic_conf" ]]; then
 	setup_synthetic_links
 fi
 
+# Set the password in the keychain
+if [[ -z "$(get_password)" ]]; then
+	set_password
+fi
+
+password="$(get_password)"
+
 # Mount everything
 for share in $shares; do
 	# Set up the mount target dir for the share
@@ -95,6 +106,10 @@ for share in $shares; do
 
 	# Mount the share
 	if ! is_mounted "$share"; then
-		mount_capsule "$share"
+		mount_capsule "$share" "$password"
 	fi
+
+	echo "$base_dir/$share"
 done
+
+unset password
