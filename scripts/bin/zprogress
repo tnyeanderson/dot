@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Print s for each nth line received on stdin
+
+# Without any arguments, a period is printed for each line
+
+# Usage: dotprogress [n] [s]
+
+# Default n to 1
+n=${1:-1}
+
+# Default s to period
+c=${2:-.}
+
+awk "NR % $n == 0 "'{ORS=""; print "'"$c"'"}'
+
+# Trailing newline
+echo
