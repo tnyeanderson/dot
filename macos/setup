@@ -11,6 +11,11 @@ if [[ "$(uname -s)" != Darwin ]]; then
 	exit 1
 fi
 
+if [[ -z "$DOTDIR" ]] || [[ ! -d "$DOTDIR" ]]; then
+	echo 'ERROR: Environment variable DOTDIR required, and must exist. Set up dot first!'
+	exit 1
+fi
+
 current_hostname="$(scutil --get ComputerName)"
 read -rp "Enter computer name (hostname) or leave blank to keep as-is [$current_hostname]: " hostname
 
@@ -139,7 +144,14 @@ if ! command -v brew >/dev/null; then
 fi
 
 # Install basic tools
-brew install bash gpg shellcheck shfmt stats tmux vim
+brew install bash
+brew install gpg
+brew install shellcheck
+brew install shfmt
+brew install step
+brew install stats
+brew install tmux
+brew install vim
 
 # Install applications
 brew install --cask bitwarden
@@ -163,5 +175,17 @@ shell=/usr/local/bin/bash
 if ! grep "$shell" /etc/shells >/dev/null 2>&1; then
 	echo "$shell" | sudo tee -a /etc/shells >/dev/null
 fi
-chsh -s "$shell"
+if [[ "$SHELL" != "$shell" ]]; then
+	chsh -s "$shell"
+fi
+
+# Set default shell in Terminal also
 defaults write com.apple.Terminal Shell -string "$shell"
+
+###########################################
+# Galaxy
+
+# Add galaxy CA
+step certificate install --all "$DOTDIR/ssl/galaxy-ca.crt"
+
+# TODO: Set up VPN
