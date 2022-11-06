@@ -148,6 +148,8 @@ fi
 
 # Install basic tools
 brew install bash
+brew install ca-certificates
+brew install curl
 brew install go
 brew install gpg
 brew install shellcheck
@@ -155,6 +157,7 @@ brew install shfmt
 brew install step
 brew install stats
 brew install tmux
+brew install tree
 brew install vim
 
 # gclip
