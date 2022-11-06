@@ -68,7 +68,7 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 # Disable auto-sleep
-sudo pmset -a displaysleep 0 sleep 0
+sudo pmset -a displaysleep 0 sleep 0 disksleep 0
 
 # Disable creation of .DS_Store files on network/usb shares
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool TRUE
@@ -111,8 +111,11 @@ defaults write com.apple.dock wvous-br-corner -int 3
 defaults write com.apple.dock wvous-br-modifier -int 0
 
 # Require password immediately after sleep or screen saver begins
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 0
+# These keys don't exist anymore. Do it manually in:
+# 	System Preferences > Security & Privacy > General
+# https://www.kolide.com/blog/macos-10-13-broke-screenlock-detection
+#defaults write com.apple.screensaver askForPassword -int 1
+#defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 # Save screenshots to the desktop
 defaults write com.apple.screencapture location -string "${HOME}/Desktop"
@@ -145,6 +148,7 @@ fi
 
 # Install basic tools
 brew install bash
+brew install go
 brew install gpg
 brew install shellcheck
 brew install shfmt
@@ -152,6 +156,9 @@ brew install step
 brew install stats
 brew install tmux
 brew install vim
+
+# gclip
+go install golang.design/x/clipboard/cmd/gclip@latest
 
 # Install applications
 brew install --cask bitwarden
