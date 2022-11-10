@@ -1,0 +1,6 @@
+#!/bin/bash
+
+resources=$1
+pattern=$2
+
+kubectl get "$resources" -A -oyaml | yq '.items[] | ["---",.][]' | awk 'BEGIN {RS="---"} /'"$pattern"'/ {print RS $0}'
