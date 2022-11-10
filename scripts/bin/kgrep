@@ -3,4 +3,4 @@
 resources=$1
 pattern=$2
 
-kubectl get "$resources" -A -oyaml | yq '.items[] | ["---",.][]' | awk 'BEGIN {RS="---"} /'"$pattern"'/ {print RS $0}'
+kubectl get "$resources" -A -oyaml | yq '.items[] | ["---",.][]' | awk -v pattern="$pattern" 'BEGIN {RS="---"} $0~pattern {print RS $0}'
