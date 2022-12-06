@@ -1,6 +1,9 @@
 #!/bin/bash
 
-gitdir="${GITDIR:-.}"
+gitdir="${1:-$GITDIR}"
+gitdir="${gitdir:-.}"
+
+tocheck=$2
 
 indent() {
 	sed 's/^/  /g'
@@ -25,8 +28,9 @@ git_status() {
 	fi
 }
 
-if [[ -n "$1" ]]; then
-	git_status "$1"
+if [[ -n "$tocheck" ]]; then
+	git_status "$tocheck"
 else
-	find "$gitdir" -maxdepth 1 -mindepth 1 -type d -exec bash -c "$0 \"\$1\"" shell {} \;
+	# See SC2156
+	find "$gitdir" -maxdepth 1 -mindepth 1 -type d -exec bash -c "$0 \"$gitdir\" \"\$1\"" shell {} \;
 fi
