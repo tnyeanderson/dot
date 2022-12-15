@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for host in "$@"; do
+	tmux split -h "ssh $host"
+done
