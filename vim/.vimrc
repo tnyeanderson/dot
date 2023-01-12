@@ -43,6 +43,7 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
     Plug 'vim-pandoc/vim-pandoc-syntax'
     Plug 'fatih/vim-go'
     Plug 'airblade/vim-gitgutter'
+    Plug 'rhysd/conflict-marker.vim'
     Plug 'tpope/vim-dispatch'
     Plug 'vim-scripts/RltvNmbr.vim'
     Plug 'morhetz/gruvbox'
