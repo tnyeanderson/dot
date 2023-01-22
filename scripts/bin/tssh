@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Get original (calling) pane name
+pane="${TMUX_PANE}"
+
 for host in "$@"; do
 	tmux split -h "ssh $host"
 done
+
+tmux select-layout main-horizontal
+tmux kill-pane -t "$pane"
