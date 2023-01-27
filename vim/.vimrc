@@ -177,7 +177,7 @@ function OnOpenVimrc()
 endfunction
 
 function OnOpenYaml()
-  setlocal tabstop=2 shiftwidth=2 expandtab filetype=yaml foldmethod=indent nofoldenable
+  setlocal tabstop=2 shiftwidth=2 expandtab filetype=yaml foldmethod=indent nofoldenable indentkeys-=0#
 endfunction
 
 function OnOpen()
