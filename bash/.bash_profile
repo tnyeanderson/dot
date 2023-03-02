@@ -87,6 +87,19 @@ export PATH="$PATH:$HOME/.local/bin"
 export PATH="$HOME/bin:$PATH"
 
 # ----------------------------------------------------
+# FUNCTIONS
+# ----------------------------------------------------
+
+mkcd() {
+	# shellcheck disable=SC2164
+	mkdir -p "$1" && cd "$1"
+}
+
+mkvi() {
+	mkdir -p "$(dirname "$1")" && vi "$1"
+}
+
+# ----------------------------------------------------
 # LESS
 # ----------------------------------------------------
 
@@ -113,5 +126,5 @@ export GROFF_NO_SGR=1              # for konsole and gnome-terminal
 # ----------------------------------------------------
 
 # Local changes and overrides should be made in ~/.bash_profile.local
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC1091
 [[ -f "$HOME/.bash_profile.local" ]] && source "$HOME/.bash_profile.local"
