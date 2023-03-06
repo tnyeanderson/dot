@@ -90,6 +90,17 @@ export PATH="$HOME/bin:$PATH"
 # FUNCTIONS
 # ----------------------------------------------------
 
+..() {
+	levels=$1
+	if [[ -z "$levels" ]]; then
+		levels=1
+	fi
+	# shellcheck disable=SC2034
+	for i in $(seq 1 "$levels"); do
+		cd ..
+	done
+}
+
 mkcd() {
 	# shellcheck disable=SC2164
 	mkdir -p "$1" && cd "$1"
