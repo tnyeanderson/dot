@@ -2,5 +2,13 @@
 
 resources=$1
 pattern=$2
+namespace=$3
 
-kubectl get "$resources" -A -oyaml | yq '.items[] | ["---",.][]' | awk -v pattern="$pattern" 'BEGIN {RS="---"} $0~pattern {print RS $0}'
+if [[ -n "$namespace" ]]; then
+	ns="-n $namespace"
+else
+	# Check all namespaces by default
+	ns='-A'
+fi
+
+kubectl get "$resources" $ns -oyaml | yq '.items[] | ["---",.][]' | awk -v pattern="$pattern" 'BEGIN {RS="---"} $0~pattern {print RS $0}'
