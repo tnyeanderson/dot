@@ -4,8 +4,8 @@ path=$1
 output=""
 
 while true; do
-	ls=$(ls -ald "$path")
-	acl=${ls:10:1}
+	acl='.'
+	[[ -n "$(getfacl -s "$path" 2>/dev/null)" ]] && acl='+'
 	fmt='%A'"${acl}"'\v%U(%u)\v%G(%g)\v%N'
 	stat=$(stat --printf "$fmt" "$path")
 	output="${output}\n${stat}"
