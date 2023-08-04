@@ -4,7 +4,10 @@ path=$1
 output=""
 
 while true; do
-	stat=$(stat --printf '%A\v%U(%u)\v%G(%g)\v%N' "$path")
+	ls=$(ls -ald "$path")
+	acl=${ls:10:1}
+	fmt='%A'"${acl}"'\v%U(%u)\v%G(%g)\v%N'
+	stat=$(stat --printf "$fmt" "$path")
 	output="${output}\n${stat}"
 	parent=$(dirname "$path")
 	if [[ "$parent" == "$path" ]]; then
