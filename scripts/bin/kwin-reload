@@ -1,3 +1,5 @@
 #!/bin/bash
 
 qdbus org.kde.KWin /KWin org.kde.KWin.reconfigure
+
+#pkill startplasma-x11
