@@ -1,0 +1,6 @@
+#!/bin/bash
+
+query=$1
+shift
+
+find . -iname '*'"$query"'*' "$@"
