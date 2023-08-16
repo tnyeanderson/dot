@@ -47,6 +47,7 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
     Plug 'tpope/vim-dispatch'
     Plug 'vim-scripts/RltvNmbr.vim'
     Plug 'morhetz/gruvbox'
+    Plug 'hashivim/vim-terraform'
   call plug#end()
   set updatetime=100
 endif
