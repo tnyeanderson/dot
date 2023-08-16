@@ -1,11 +1,34 @@
 #!/bin/bash
 
+# Basically cssh with tmux
+
+# tmux uses execvp in the background so an exported function won't work.
+# Therefore, if this binary is called with --connect as the first arg,
+# it will act as the entrypoint script for the new pane.
+if [[ "$1" == '--connect' ]]; then
+	host=$2
+	if ! ssh -o ConnectTimeout=5 "$host"; then
+		echo "$(tput setaf 1)--- ERROR: SSH CONNECTION FAILED FOR $host ---$(tput sgr0)"
+		bash
+	fi
+	exit 0
+fi
+
 # Get original (calling) pane name
 pane="${TMUX_PANE}"
 
+# Use columns tmux layout by default
+layout=main-horizontal
+
+# For more than 5 hosts, use tiled tmux layout
+if [[ "$#" -gt 5 ]]; then
+	layout=tiled
+fi
+
 for host in "$@"; do
-	tmux split -h "ssh $host"
+	tmux split -h "$0 --connect $host"
+	# Avoid "no space for new pane" by retiling
+	tmux select-layout "$layout"
 done
 
-tmux select-layout main-horizontal
 tmux kill-pane -t "$pane"
