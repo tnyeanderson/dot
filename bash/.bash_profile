@@ -80,6 +80,7 @@ export PYTHONDONTWRITEBYTECODE=1
 # PATH
 # ----------------------------------------------------
 
+export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:$HOME/.local/bin"
 # Scripts in ~/bin should override others on the system
