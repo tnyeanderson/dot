@@ -5,3 +5,5 @@
 	conflictstyle = diff3
 [core]
 	editor = vi
+[push]
+	autoSetupRemote = true
