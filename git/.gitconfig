@@ -7,3 +7,7 @@
 	editor = vi
 [push]
 	autoSetupRemote = true
+[qclone]
+	prefix = git@github.com:
+	user = tnyeanderson
+	suffix = .git

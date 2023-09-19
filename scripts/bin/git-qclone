@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Provide either a repo name or user/repo as the argument
+arg=$1
+
+prefix=$(git config qclone.prefix)
+user=$(git config qclone.user)
+suffix=$(git config qclone.suffix)
+
+# Set default values
+: "${prefix:=https://github.com/}"
+: "${suffix:=.git}"
+
+if [[ "$arg" =~ / ]]; then
+	# Both a username and a repo were provided
+	set -x
+	exec git clone "${prefix}${arg}${suffix}"
+fi
+
+# Only a repo was provided
+
+if [[ -z "$user" ]]; then
+	echo "ERROR: user not provided in either git config or argument" >&2
+	exit 1
+fi
+
+set -x
+exec git clone "${prefix}${user}/${arg}${suffix}"
