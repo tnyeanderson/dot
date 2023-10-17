@@ -77,6 +77,17 @@ export GOPATH="$HOME/go"
 export PYTHONDONTWRITEBYTECODE=1
 
 # ----------------------------------------------------
+# KUBERNETES
+# ----------------------------------------------------
+
+if command -v kubectl >/dev/null 2>&1; then
+	alias k=kubectl
+	# shellcheck disable=SC1090
+	source <(kubectl completion bash)
+	complete -o default -F __start_kubectl k
+fi
+
+# ----------------------------------------------------
 # PATH
 # ----------------------------------------------------
 
