@@ -9,5 +9,5 @@
 	autoSetupRemote = true
 [qclone]
 	prefix = git@github.com:
-	user = tnyeanderson
+	owner = tnyeanderson
 	suffix = .git
