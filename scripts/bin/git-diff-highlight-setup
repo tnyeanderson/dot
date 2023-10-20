@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if git config --global --get pager.diff >/dev/null 2>&1; then
+	echo "skipping: pager.diff is already set in the git config"
+	exit 0
+fi
+
+declare -a preferred_locations=(
+	"/usr/share/doc/git/contrib/diff-highlight/diff-highlight"
+)
+
+# Look for the diff-highlight program in known locations
+for location in "${preferred_locations[@]}"; do
+	if [[ -f "$location" ]]; then
+		differ="$location"
+		break
+	fi
+done
+
+# Look in /usr for diff-highlight if we haven't found it yet
+if [[ -z "$differ" ]]; then
+	differ=$(find /usr -type f -name diff-highlight | head -n 1)
+fi
+
+if [[ -z "$differ" ]]; then
+	echo "error: diff-highlight program not found"
+	exit 1
+fi
+
+pager="perl $differ | less"
+git config --global pager.diff "$pager"

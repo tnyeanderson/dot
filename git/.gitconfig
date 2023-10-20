@@ -11,3 +11,5 @@
 	prefix = git@github.com:
 	owner = tnyeanderson
 	suffix = .git
+[pager]
+	diff = perl /usr/share/doc/git/contrib/diff-highlight/diff-highlight | less
