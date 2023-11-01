@@ -4,6 +4,6 @@ lang=$1
 shift
 
 query=$*
-query=${query/ /+}
+query=${query// /+}
 
 curl "https://cht.sh/$lang/$query"
