@@ -1,0 +1,24 @@
+#!/bin/bash
+
+target=$1
+kubeconfig="$HOME/.kube"
+
+if [[ -z "$target" ]]; then
+	echo "error: target must be provided as an argument" >&2
+	exit 1
+fi
+
+if [[ -n "$KUBECONFIG" ]]; then
+	# Use first entry in colon separated list
+	kubeconfig=${KUBECONFIG%%:*}
+fi
+
+sscp "$target:/etc/kubernetes/admin.conf" "$kubeconfig"
+
+if ! yq <"$kubeconfig/admin.conf" >/dev/null 2>&1; then
+	echo "error: invalid yaml" >&2
+	rm "$kubeconfig/admin.conf"
+	exit 1
+fi
+
+mv "$kubeconfig/admin.conf" "$kubeconfig/config"
