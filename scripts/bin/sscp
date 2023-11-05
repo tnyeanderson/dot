@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# sscp is like scp combined with sudo. It can be used to copy files/directories
+# from a remote host which would require escalation to access (i.e. ones owned
+# by root). The local destination must be a directory.
+#
+# Example (copy host's sshd_config file to /tmp)
+#
+#   sscp user@host:/etc/ssh/sshd_config /tmp
+
+src=$1
+dest=$2
+
+IFS=: read -r remoteconn remotepath <<<"$src"
+
+if [[ "$remotepath" == "$src" ]]; then
+	echo "error: source must be a remote path" >&2
+	exit 1
+fi
+
+if [[ ! -e "$dest" ]]; then
+	if ! mkdir -p "$dest"; then
+		echo "error: failed to create destination directory" >&2
+		exit 1
+	fi
+fi
+
+if [[ ! -d "$dest" ]]; then
+	echo "error: destination must be a directory" >&2
+	exit 1
+fi
+
+# Set up local .sscp folder
+sscpdir="$HOME/.sscp"
+rm -rf "$sscpdir"
+mkdir -p "$sscpdir"
+tempdest="$sscpdir/latest.tar.gz"
+
+#### AGENT SCRIPT
+cat >"$sscpdir/agent" <<'EOF'
+#!/bin/bash
+
+set -e
+
+sourcepath=$*
+sscpdir=${SSCPDIR:-.sscp}
+dest="$sscpdir/latest.tar.gz"
+if [[ -d "$sourcepath" ]]; then
+	tar -czvf "$dest" -C "$sourcepath" .
+else
+	dir=$(dirname "$sourcepath")
+	file=$(basename "$sourcepath")
+	tar -czvf "$dest" -C "$dir" "$file"
+fi
+chown "$SUDO_UID:$SUDO_GID" "$dest"
+chmod 400 "$dest"
+
+EOF
+#### END AGENT SCRIPT
+
+# Recreate remote .sscp folder
+ssh "$remoteconn" "rm -rf .sscp; mkdir -p .sscp" >/dev/null
+
+# Copy agent
+scp "$sscpdir/agent" "$remoteconn:.sscp/agent" >/dev/null
+
+# Run agent
+ssh -t "$remoteconn" "sudo bash .sscp/agent $remotepath"
+
+# Copy tar file to local machine
+scp "$remoteconn:.sscp/latest.tar.gz" "$tempdest" >/dev/null
+
+# Extract tar file
+tar -xzvf "$tempdest" -C "$dest"
+
+# Delete remote tar file
+ssh "$remoteconn" "rm -rf .sscp" >/dev/null
+
+# Delete local tar file
+rm -rf "$sscpdir"
