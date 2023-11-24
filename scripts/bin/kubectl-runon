@@ -1,0 +1,11 @@
+#!/bin/bash
+
+node=$1
+shift
+
+if ! kubectl get node "$node" >/dev/null 2>&1; then
+	echo "error: first argument must be a node name" >&2
+	exit 1
+fi
+
+kubectl run --overrides='{"spec": { "nodeSelector": {"kubernetes.io/hostname": "'"$node"'"}}}' "$@"
