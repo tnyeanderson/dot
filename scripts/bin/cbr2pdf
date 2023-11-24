@@ -30,7 +30,7 @@ while [[ -n "$1" ]]; do
 	echo "unzipping to: $tmp"
 	7z e -o"$tmp" "$file" >/dev/null
 	echo "compiling jpg files into: $pdf"
-	img2pdf -o "$pdf" "$tmp"/*.jpg
+	img2pdf -o "$pdf" "$tmp"/*.jp*g
 	echo "done"
 
 	rm -rf "$tmp"
