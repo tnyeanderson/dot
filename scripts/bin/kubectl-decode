@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -e
+
+# Get secrets in YAML format
+yaml=$(kubectl get secret "$@" -oyaml)
+
+# Wrap single-item results in an items array
+hasitems=$(yq 'has("items")' <<<"$yaml")
+if [[ "$hasitems" == 'false' ]]; then
+	yaml=$(yq '{"items": [.]}' <<<"$yaml")
+fi
+
+# Decode all the secret values. Using map_values here changes '.data' in
+# place, so we just delete it after
+decoder='.items |= map(.stringData = (.data | map_values(@base64d))) | del(.items[].data)'
+yaml=$(yq "$decoder" <<<"$yaml")
+
+# Unwrap single-item results
+length=$(yq '.items | length' <<<"$yaml")
+if [[ "$length" -eq 1 ]]; then
+	yaml=$(yq '.items[0]' <<<"$yaml")
+fi
+
+# Output the result
+yq <<<"$yaml"
