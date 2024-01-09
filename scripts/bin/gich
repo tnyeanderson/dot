@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "https://github.com/tnyeanderson/dot/blob/main/scripts/bin/$1"
