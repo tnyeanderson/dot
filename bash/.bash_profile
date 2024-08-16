@@ -110,14 +110,17 @@ export PATH="$HOME/bin:$PATH"
 # ----------------------------------------------------
 
 ..() {
-	levels=$1
-	if [[ -z "$levels" ]]; then
-		levels=1
-	fi
+	levels=${1:-1}
 	# shellcheck disable=SC2034
 	for i in $(seq 1 "$levels"); do
 		cd ..
 	done
+}
+
+cdg() {
+	if [[ -d "$GITDIR" ]]; then
+		cd "$GITDIR" || echo "failed to cd to $GITDIR"
+	fi
 }
 
 mkcd() {
