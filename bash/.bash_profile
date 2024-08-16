@@ -118,9 +118,8 @@ export PATH="$HOME/bin:$PATH"
 }
 
 cdg() {
-	if [[ -d "$GITDIR" ]]; then
-		cd "$GITDIR" || echo "failed to cd to $GITDIR"
-	fi
+	dir="$GITDIR/$1"
+	cd "$dir" || echo "failed to cd to $dir"
 }
 
 mkcd() {
@@ -153,6 +152,27 @@ export LESS_TERMCAP_us=$'\e[1m'    # begin underline -> bold
 export LESS_TERMCAP_me=$'\e[0m'    # reset bold/blink
 export LESS_TERMCAP_ue=$'\e[0m'    # reset underline
 export GROFF_NO_SGR=1              # for konsole and gnome-terminal
+
+# ----------------------------------------------------
+# COMPLETIONS
+# ----------------------------------------------------
+
+_complete_dirs_in_dir() {
+	dir=$1
+	word=$2
+	if [[ ! -d "$dir" ]]; then
+		echo "dir does not exist: $dir"
+	fi
+	while read -r item; do
+		COMPREPLY+=("$item")
+	done < <(cd "$dir" && compgen -o dirnames "$word")
+}
+
+_complete_cdg() {
+	_complete_dirs_in_dir "$GITDIR" "$2"
+}
+
+complete -F _complete_cdg cdg
 
 # ----------------------------------------------------
 # Source local profile
