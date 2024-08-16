@@ -165,14 +165,15 @@ _complete_dirs_in_dir() {
 	fi
 	while read -r item; do
 		COMPREPLY+=("$item")
-	done < <(cd "$dir" && compgen -o dirnames "$word")
+	done < <(cd "$dir" && compgen -o nospace -o dirnames "$word")
 }
 
 _complete_cdg() {
 	_complete_dirs_in_dir "$GITDIR" "$2"
 }
 
-complete -F _complete_cdg cdg
+complete -o nospace -F _complete_cdg cdg
+complete -c cich vich
 
 # ----------------------------------------------------
 # Source local profile

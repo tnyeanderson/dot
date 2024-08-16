@@ -4,7 +4,7 @@
 
 # Without any arguments, a period is printed for each line
 
-# Usage: dotprogress [n] [s]
+# Usage: zprogress [n] [s]
 
 # Default n to 1
 n=${1:-1}
