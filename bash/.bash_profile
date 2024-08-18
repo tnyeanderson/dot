@@ -62,6 +62,19 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 _expand() { true; }
 
 # ----------------------------------------------------
+# BASH
+# ----------------------------------------------------
+#
+alias g=git
+alias gb='git checkout -b'
+alias gc='git commit'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias gl='git log'
+alias gp='git pull'
+alias gs='git status'
+
+# ----------------------------------------------------
 # GO
 # ----------------------------------------------------
 
