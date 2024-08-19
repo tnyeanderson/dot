@@ -62,10 +62,11 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 _expand() { true; }
 
 # ----------------------------------------------------
-# BASH
+# GIT
 # ----------------------------------------------------
-#
+
 alias g=git
+alias ga='git add'
 alias gb='git checkout -b'
 alias gc='git commit'
 alias gd='git diff'
