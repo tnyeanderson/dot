@@ -1,0 +1,51 @@
+#!/bin/bash
+
+declare -a args
+declare -a cmd
+selector=''
+namespace_arg=''
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+	'--')
+		shift
+		cmd+=("$@")
+		break
+		;;
+	-l | --selector)
+		selector=$2
+		shift 2
+		;;
+	-n | --namespace)
+		namespace_arg="-n $2"
+		shift 2
+		;;
+	-i | -t | -it)
+		echo "error: -i and -t are incompatible with kubectl-execs" >&2
+		exit 1
+		;;
+	*)
+		args+=("$1")
+		shift
+		;;
+	esac
+done
+
+if [[ -z "$selector" ]]; then
+	echo "error: -l or --selector is required" >&2
+	exit 1
+fi
+
+# shellcheck disable=SC2086
+pods=$(kubectl get po $namespace_arg -l "$selector" -oname)
+
+if [[ -z "$pods" ]]; then
+	echo "error: no pods found matching selector" >&2
+	exit 1
+fi
+
+while read -r pod; do
+	echo "------ $pod ------"
+	# shellcheck disable=SC2086
+	kubectl exec $namespace_arg "${args[@]}" "$pod" -- "${cmd[@]}"
+done <<<"$pods"
