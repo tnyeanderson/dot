@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+path=$1
+shift
+
+podjson=$(kubectl get po "$@" -ojson)
+node=$(jq -r '.spec.nodeName' <<<"$podjson")
+containerid=$(jq -r '.status.containerStatuses[0].containerID' <<<"$podjson" | sed 's#containerd://##')
+
+read -r script <<EOF
+sudo ls -al /proc/"\$(sudo crictl inspect -o go-template --template '{{.info.pid}}' "$containerid")"/root/$path
+EOF
+
+if [[ "$(hostname -s)" == "$node" ]]; then
+	bash -c "$script"
+	exit 0
+fi
+
+# We need extra single quotes here, since SSH sends a single string as the command
+ssh -qt "$node" bash -c "'$script'"
