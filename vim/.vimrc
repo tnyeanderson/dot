@@ -45,6 +45,7 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
     Plug 'airblade/vim-gitgutter'
     Plug 'rhysd/conflict-marker.vim'
     Plug 'tpope/vim-dispatch'
+    Plug 'tpope/vim-fugitive'
     Plug 'vim-scripts/RltvNmbr.vim'
     Plug 'morhetz/gruvbox'
     Plug 'hashivim/vim-terraform'
@@ -72,7 +73,7 @@ let g:pandoc#syntax#conceal#blacklist = [ 'inlinemath', 'ellipses', 'quotes', 's
 let g:pandoc#syntax#codeblocks#embeds#langs = [ 'vim', 'go', 'markdown', 'python', 'bash=sh' ]
 
 " gruvbox settings
-colorscheme gruvbox
+silent! colorscheme gruvbox
 let g:gruvbox_italic = 1
 
 """"""""""""""""""""
