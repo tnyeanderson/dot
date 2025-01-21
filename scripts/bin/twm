@@ -1,0 +1,58 @@
+#!/bin/bash
+
+set -e
+
+tmpfile=$(mktemp -t 'twm.XXX')
+trap 'rm "$tmpfile"' EXIT
+
+orig=$(tmux list-windows)
+
+cat >"$tmpfile" <<EOF
+$orig
+
+# This script is a text-based window manager for tmux.  To close a window,
+# delete its line. Rearrange lines to reorder your windows. Windows will be
+# renumbered if their order has changed. Only lines that start with a number
+# will be parsed.  If a window is commented out, it will be closed. An empty
+# file (or one with all comments) aborts the operation (no action will be
+# taken).
+EOF
+
+vi "$tmpfile"
+
+desired=$(awk '/[0-9]/' <"$tmpfile")
+
+if [[ -z "$desired" ]]; then
+	echo "Operation was cancelled" >&2
+	exit 0
+fi
+
+if [[ "$orig" == "$desired" ]]; then
+	echo "Unchanged" >&2
+	exit 0
+fi
+
+originalwindow=$(tmux display-message -p -F '#{window_id}')
+
+# Move any remaining windows, in order, to an index >=100
+newindex=100
+while read -r line; do
+	id=$(awk -F: '{print $1}' <<<"$line")
+	tmux move-window -s ":$id" -t ":$newindex"
+	newindex=$((newindex + 1))
+done <<<"$desired"
+
+# All windows moved to an index >= 100, delete the remaining
+while read -r line; do
+	id=$(awk -F: '{print $1}' <<<"$line")
+	if [[ "$id" -lt 100 ]]; then
+		tmux kill-window -t ":$id"
+	fi
+done < <(tmux list-windows)
+
+# Renumber
+tmux move-window -r
+
+tmux select-window -t "$originalwindow"
+
+echo "$desired"
