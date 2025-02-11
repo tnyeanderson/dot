@@ -117,6 +117,7 @@ export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:$HOME/.local/bin"
 # Scripts in ~/bin should override others on the system
 # This is insecure, need to switch to a "z" style system
+export PATH="$HOME/bin.local:$PATH"
 export PATH="$HOME/bin:$PATH"
 
 # ----------------------------------------------------
