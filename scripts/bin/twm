@@ -20,7 +20,7 @@ EOF
 
 vi "$tmpfile"
 
-desired=$(awk '/[0-9]/' <"$tmpfile")
+desired=$(awk '/^[0-9]/' <"$tmpfile")
 
 if [[ -z "$desired" ]]; then
 	echo "Operation was cancelled" >&2
