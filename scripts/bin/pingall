@@ -1,0 +1,14 @@
+#!/bin/bash
+
+hosts=("$@")
+
+trap exit SIGINT SIGTERM
+
+while [[ "${#hosts[@]}" -gt 0 ]]; do
+	for i in "${!hosts[@]}"; do
+		if ping -c 1 "${hosts[$i]}" >/dev/null 2>&1; then
+			echo "${hosts[$i]} is up"
+			unset "hosts[$i]"
+		fi
+	done
+done
