@@ -103,8 +103,8 @@ endfunction
 command -bang W :execute "call WriteSudo(<bang>0)"
 
 " resize windows with <, >, +, _
-nnoremap < <C-W><
-nnoremap > <C-W>>
+nnoremap ( <C-W><
+nnoremap ) <C-W>>
 nnoremap + <C-W>+
 nnoremap _ <C-W>-
 
