@@ -11,4 +11,5 @@ while [[ "${#hosts[@]}" -gt 0 ]]; do
 			unset "hosts[$i]"
 		fi
 	done
+	sleep 1
 done
