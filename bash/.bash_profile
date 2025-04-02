@@ -32,6 +32,7 @@ shopt -s direxpand
 # ----------------------------------------------------
 
 export GITDIR="$HOME/Desktop/git"
+export GITHUBDIR="$HOME/Desktop/github"
 export ZETDIR="$GITDIR/zet"
 export DOTDIR="$GITDIR/dot"
 export TODOFILE="$HOME/Desktop/TODO.md"
@@ -137,6 +138,11 @@ cdg() {
 	cd "$dir" || echo "failed to cd to $dir"
 }
 
+cdgh() {
+	dir="$GITHUBDIR/$1"
+	cd "$dir" || echo "failed to cd to $dir"
+}
+
 mkcd() {
 	# shellcheck disable=SC2164
 	mkdir -p "$1" && cd "$1"
@@ -144,6 +150,13 @@ mkcd() {
 
 mkvi() {
 	mkdir -p "$(dirname "$1")" && vi "$1"
+}
+
+ssha() {
+	if [[ -z "$SSH_AGENT_PID" ]] || [[ -z "$SSH_AUTH_SOCK" ]]; then
+		eval "$(ssh-agent)"
+	fi
+	ssh-add
 }
 
 # ----------------------------------------------------
@@ -187,7 +200,12 @@ _complete_cdg() {
 	_complete_dirs_in_dir "$GITDIR" "$2"
 }
 
+_complete_cdgh() {
+	_complete_dirs_in_dir "$GITHUBDIR" "$2"
+}
+
 complete -o nospace -F _complete_cdg cdg
+complete -o nospace -F _complete_cdgh cdgh
 complete -c cich vich
 
 # ----------------------------------------------------
