@@ -1,0 +1,15 @@
+#!/bin/bash
+
+hosts=("$@")
+
+trap exit SIGINT SIGTERM
+
+while [[ "${#hosts[@]}" -gt 0 ]]; do
+	for i in "${!hosts[@]}"; do
+		if timeout 2 ssh -qn "${hosts[$i]}" echo hi >/dev/null 2>&1; then
+			echo "${hosts[$i]} can be accessed with public key auth"
+			unset "hosts[$i]"
+		fi
+	done
+	sleep 1
+done
