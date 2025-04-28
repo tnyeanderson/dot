@@ -77,14 +77,6 @@ alias gp='git pull'
 alias gs='git status'
 
 # ----------------------------------------------------
-# GO
-# ----------------------------------------------------
-
-# Set GOPATH explicitly in case go isn't installed
-# Since we add $GOPATH/bin to the PATH
-export GOPATH="$HOME/go"
-
-# ----------------------------------------------------
 # PYTHON
 # ----------------------------------------------------
 
@@ -113,8 +105,8 @@ fi
 # PATH
 # ----------------------------------------------------
 
+export PATH="$PATH:$HOME/go/root/current/go/bin"
 export PATH="$PATH:/usr/local/go/bin"
-export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:$HOME/.local/bin"
 # Scripts in ~/bin should override others on the system
 # This is insecure, need to switch to a "z" style system

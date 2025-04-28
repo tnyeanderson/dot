@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+version=$1
+
+if [[ -z "$version" ]]; then
+	echo 'error: must provide go version as first argument' >&2
+	exit 1
+fi
+
+install_dir="$HOME/go/root/$version"
+
+if [[ -d "$install_dir" ]]; then
+	mv "$install_dir" "$install_dir.bak-$(date '+%Y%m%d%H%M%S')"
+fi
+
+mkdir -p "$install_dir"
+
+url="https://go.dev/dl/go${version}.linux-amd64.tar.gz"
+dl=$(mktemp --suffix .tar.gz -t go-XXX)
+wget -O "$dl" "$url"
+
+tar -C "$install_dir" -xzf "$dl"
