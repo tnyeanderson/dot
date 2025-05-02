@@ -1,0 +1,68 @@
+#!/bin/bash
+
+program=$(basename "$0")
+
+read -rd '' helpstr <<EOF
+
+Replace a value in a configmap with the contents of a file and output the
+result to stdout. If the "-n" flag is omitted, the current namespace from the
+context is used.
+
+USAGE
+
+  $program [-n NAMESPACE] CONFIGMAP KEY=FILE...
+
+EXAMPLES
+
+  Replace "mykey" in "myconfigmap" within "mynamespace" to the contents of
+  "newcontents.txt", then apply the changes:
+
+    $program -n mynamespace myconfigmap mykey=newcontents.txt | kubectl apply -f -
+
+  Replace the "template.json" key in the "template" configmap in the "account"
+  namespace with the contents of the "resources/template.json" file:
+
+    $program -n account template template.json=resources/template.json
+
+  Update values for multiple keys:
+
+	  $program myconfigmap key1=file1 key2=file2
+
+EOF
+
+declare -a args
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+	-n | --namespace)
+		namespace=$2
+		shift
+		;;
+	-*)
+		echo "error: unknown flag $1"
+		exit 1
+		;;
+	*)
+		args+=("$1")
+		;;
+	esac
+	shift
+done
+set -- "${args[@]}"
+
+configmap=$1
+shift
+
+if [[ -z "$configmap" ]]; then
+	echo "$helpstr" >&2
+	echo "error: missing argument: CONFIGMAP" >&2
+	exit 1
+fi
+
+json=$(kubectl get -n "$namespace" cm "$configmap" -ojson)
+
+for arg in "$@"; do
+	IFS='=' read -r key file <<<"$arg"
+	json=$(jq --rawfile contents "$file" '.data."'"$key"'" = $contents' <<<"$json")
+done
+
+echo "$json"
