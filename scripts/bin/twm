@@ -48,7 +48,6 @@ should_delete=no
 newindex=100
 while IFS=': ' read -r id name; do
 	newindex=$((newindex + 1))
-	#name=${name# }
 	if [[ -z "$id" ]]; then
 		tmux new-window -d -t ":$newindex"
 		if [[ -n "$name" ]]; then
@@ -62,14 +61,15 @@ done <<<"$desired"
 
 # All windows moved to an index >= 100, delete the remaining
 while IFS=': ' read -r id _; do
-	if [[ "$id" -lt 100 ]]; then
-		if [[ "$id" == "$originalwindowindex" ]]; then
-			tmux move-window -d -s ":$id" -t ":200"
-			should_delete=yes
-			continue
-		fi
-		tmux kill-window -t ":$id"
+	if [[ "$id" -ge 100 ]]; then
+		break
 	fi
+	if [[ "$id" == "$originalwindowindex" ]]; then
+		tmux move-window -d -s ":$id" -t ":200"
+		should_delete=yes
+		continue
+	fi
+	tmux kill-window -t ":$id"
 done < <(listwindows)
 
 # Renumber
