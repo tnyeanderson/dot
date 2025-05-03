@@ -5,22 +5,30 @@ set -e
 tmpfile=$(mktemp -t 'twm.XXX')
 trap 'rm "$tmpfile"' EXIT
 
-orig=$(tmux list-windows)
+listwindows() {
+	while IFS=: read -r id _; do
+		name=$(tmux display-message -t ":$id" -p '#{window_name}')
+		echo "$id: $name"
+	done < <(tmux list-windows)
+}
+
+orig=$(listwindows)
 
 cat >"$tmpfile" <<EOF
 $orig
 
-# This script is a text-based window manager for tmux.  To close a window,
-# delete its line. Rearrange lines to reorder your windows. Windows will be
-# renumbered if their order has changed. Only lines that start with a number
-# will be parsed.  If a window is commented out, it will be closed. An empty
-# file (or one with all comments) aborts the operation (no action will be
-# taken).
+# This script is a text-based window manager for tmux. To close a window,
+# delete or comment its line. Rearrange lines to reorder your windows. Adjust
+# window names as desired. Windows will be renumbered if their order has
+# changed. To create a window, start a line with a colon, optionally followed
+# by a space and the window name. Only lines that start with a number or a
+# colon will be parsed. An empty file (or one with only comments) aborts the
+# operation, and no action will be taken.
 EOF
 
 vi "$tmpfile"
 
-desired=$(awk '/^[0-9]/' <"$tmpfile")
+desired=$(awk '/^[0-9:]/' <"$tmpfile")
 
 if [[ -z "$desired" ]]; then
 	echo "Operation was cancelled" >&2
@@ -33,22 +41,36 @@ if [[ "$orig" == "$desired" ]]; then
 fi
 
 originalwindow=$(tmux display-message -p -F '#{window_id}')
+originalwindowindex=$(tmux display-message -p '#I')
+should_delete=no
 
-# Move any remaining windows, in order, to an index >=100
+# Move any remaining windows, in order, to an index >100
 newindex=100
-while read -r line; do
-	id=$(awk -F: '{print $1}' <<<"$line")
-	tmux move-window -s ":$id" -t ":$newindex"
+while IFS=': ' read -r id name; do
 	newindex=$((newindex + 1))
+	#name=${name# }
+	if [[ -z "$id" ]]; then
+		tmux new-window -d -t ":$newindex"
+		if [[ -n "$name" ]]; then
+			tmux rename-window -t ":$newindex" "$name"
+		fi
+		continue
+	fi
+	tmux rename-window -t ":$id" "$name"
+	tmux move-window -d -s ":$id" -t ":$newindex"
 done <<<"$desired"
 
 # All windows moved to an index >= 100, delete the remaining
-while read -r line; do
-	id=$(awk -F: '{print $1}' <<<"$line")
+while IFS=': ' read -r id _; do
 	if [[ "$id" -lt 100 ]]; then
+		if [[ "$id" == "$originalwindowindex" ]]; then
+			tmux move-window -d -s ":$id" -t ":200"
+			should_delete=yes
+			continue
+		fi
 		tmux kill-window -t ":$id"
 	fi
-done < <(tmux list-windows)
+done < <(listwindows)
 
 # Renumber
 tmux move-window -r
@@ -56,3 +78,7 @@ tmux move-window -r
 tmux select-window -t "$originalwindow"
 
 echo "$desired"
+
+if [[ "$should_delete" == yes ]]; then
+	tmux kill-window -t "$originalwindow"
+fi
