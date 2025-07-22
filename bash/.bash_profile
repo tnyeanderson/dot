@@ -94,11 +94,30 @@ alias c='docker compose'
 # KUBERNETES
 # ----------------------------------------------------
 
+__complete_cobra() {
+	local program=$1
+	shift
+	while read -r item; do
+		COMPREPLY+=("$item")
+	done < <("$program" __completeNoDesc "$@" 2>/dev/null | head -n -1)
+}
+
+__complete_kc() {
+	if [[ "${#COMP_WORDS[@]}" -gt 2 ]]; then
+		return
+	fi
+	__complete_cobra kubectl config use-context "${COMP_WORDS[COMP_CWORD]}"
+}
+
 if command -v kubectl >/dev/null 2>&1; then
-	alias k=kubectl
 	# shellcheck disable=SC1090
 	source <(kubectl completion bash)
+
+	alias k=kubectl
 	complete -o default -F __start_kubectl k
+
+	alias kc='kubectl config use-context'
+	complete -o default -F __complete_kc kc
 fi
 
 # ----------------------------------------------------
@@ -106,6 +125,7 @@ fi
 # ----------------------------------------------------
 
 export PATH="$PATH:$HOME/go/root/current/go/bin"
+export PATH="$PATH:$HOME/go/bin"
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/.local/bin"
 # Scripts in ~/bin should override others on the system
