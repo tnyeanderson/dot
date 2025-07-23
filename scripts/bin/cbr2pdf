@@ -2,6 +2,7 @@
 
 set -e
 
+outputdir=$PWD
 if [[ "$1" == '-o' ]]; then
 	outputdir="$2"
 	shift 2
@@ -10,13 +11,13 @@ fi
 while [[ -n "$1" ]]; do
 	file=$1
 	tmp="$(mktemp -d)"
-	inputdir="$(dirname "$file")"
-	inputname="$(basename "$file")"
-	out="${outputdir:-$inputdir}"
+	fullpath=$(realpath "$file")
+	inputdir=$(dirname "$file")
+	inputname=$(basename "$file")
 	pdfname="${inputname%.cb?}.pdf"
-	pdf="$out/$pdfname"
+	pdf="$outputdir/$pdfname"
 
-	if [[ -z "$file" ]] || [[ ! "$file" =~ .*\.cb(r|z) ]]; then
+	if [[ -z "$file" ]] || [[ ! "$file" =~ \.cb(r|z)$ ]]; then
 		echo "$file might not be a comic (not a .cbr or .cbz file)"
 		exit 1
 	fi
@@ -28,7 +29,12 @@ while [[ -n "$1" ]]; do
 
 	echo "=== Converting to pdf: $file === "
 	echo "unzipping to: $tmp"
-	7z e -o"$tmp" "$file" >/dev/null
+	if [[ "$file" =~ .\cbr ]]; then
+		# TODO: 7z not working with rar files?
+		(cd "$tmp" && unrar e "$fullpath" >/dev/null)
+	else
+		7z e -o"$tmp" "$file" >/dev/null
+	fi
 	echo "compiling jpg files into: $pdf"
 	img2pdf -o "$pdf" "$tmp"/*.jp*g
 	echo "done"
