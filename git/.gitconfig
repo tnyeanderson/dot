@@ -3,6 +3,9 @@
 	name = thomas
 [merge]
 	conflictstyle = diff3
+	tool = vimdiff
+[diff]
+	tool = vimdiff
 [core]
 	editor = vi
 [push]
