@@ -99,7 +99,7 @@ __complete_cobra() {
 	shift
 	while read -r item; do
 		COMPREPLY+=("$item")
-	done < <("$program" __completeNoDesc "$@" 2>/dev/null | head -n -1)
+	done < <("$program" __completeNoDesc "$@" 2>/dev/null | sed '$d')
 }
 
 __complete_kc() {
