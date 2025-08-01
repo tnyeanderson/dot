@@ -45,10 +45,8 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
     Plug 'airblade/vim-gitgutter'
     Plug 'rhysd/conflict-marker.vim'
     Plug 'tpope/vim-dispatch'
-    Plug 'tpope/vim-fugitive'
-    Plug 'vim-scripts/RltvNmbr.vim'
     Plug 'morhetz/gruvbox'
-    Plug 'hashivim/vim-terraform'
+    Plug 'dense-analysis/ale'
   call plug#end()
   set updatetime=100
 endif
@@ -56,6 +54,12 @@ endif
 """"""""""""""""""""
 " Plugin configs
 """"""""""""""""""""
+
+" ALE settings
+set omnifunc=ale#completion#OmniFunc
+let g:ale_fixers = {
+      \'go': ['goimports'],
+      \}
 
 " nerdtree without the dependency!
 let g:netrw_banner = 0
@@ -125,6 +129,12 @@ function! ToggleCheckbox()
   normal ``
 endfunction
 noremap <silent> <leader>c :call ToggleCheckbox()<CR>
+
+" print <filepath>:<linenumber>
+function! FileLine()
+  echo expand('%') . ':' . line('.')
+endfunction
+noremap <silent> <leader>l :call FileLine()<CR>
 
 " toggle relative line numbers with <leader>r
 noremap <silent> <leader>r :RN<CR>
