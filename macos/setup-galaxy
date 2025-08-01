@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -e
+
+###########################################
+# Prerequisites
+
+# Exit if not on MacOS
+if [[ "$(uname -s)" != Darwin ]]; then
+	echo "This script should only be run on a MacOS system!"
+	exit 1
+fi
+
+if [[ -z "$DOTDIR" ]] || [[ ! -d "$DOTDIR" ]]; then
+	echo 'ERROR: Environment variable DOTDIR required, and must exist. Set up dot first!'
+	exit 1
+fi
+
+current_hostname="$(scutil --get ComputerName)"
+read -rp "Enter computer name (hostname) or leave blank to keep as-is [$current_hostname]: " hostname
+
+###########################################
+# Configure system
+
+# Best reference ever:
+# https://github.com/mathiasbynens/dotfiles/blob/main/.macos
+
+# Set computer name (as done via System Preferences → Sharing)
+if [[ -n "$hostname" ]]; then
+	sudo scutil --set ComputerName "$hostname"
+	sudo scutil --set HostName "$hostname"
+	sudo scutil --set LocalHostName "$hostname"
+	sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$hostname"
+fi
+
+# Install applications
+brew install --cask bitwarden
+brew install --cask firefox
+brew install --cask gimp
+brew install --cask hiddenbar
+brew install --cask libreoffice
+brew install --cask lulu
+brew install --cask openvpn-connect
+brew install --cask protonvpn
+brew install --cask signal
+brew install --cask vlc
+
+###########################################
+# Galaxy
+
+# Add galaxy CA
+step certificate install --all "$DOTDIR/ssl/galaxy-ca.crt"
+
+# TODO: Set up VPN

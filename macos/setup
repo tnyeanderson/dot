@@ -16,22 +16,11 @@ if [[ -z "$DOTDIR" ]] || [[ ! -d "$DOTDIR" ]]; then
 	exit 1
 fi
 
-current_hostname="$(scutil --get ComputerName)"
-read -rp "Enter computer name (hostname) or leave blank to keep as-is [$current_hostname]: " hostname
-
 ###########################################
 # Configure system
 
 # Best reference ever:
 # https://github.com/mathiasbynens/dotfiles/blob/main/.macos
-
-# Set computer name (as done via System Preferences → Sharing)
-if [[ -n "$hostname" ]]; then
-	sudo scutil --set ComputerName "$hostname"
-	sudo scutil --set HostName "$hostname"
-	sudo scutil --set LocalHostName "$hostname"
-	sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$hostname"
-fi
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=" "
@@ -148,9 +137,9 @@ fi
 
 # Install basic tools
 brew install bash
+brew install bash-completion
 brew install ca-certificates
 brew install curl
-brew install go
 brew install gpg
 brew install shellcheck
 brew install shfmt
@@ -159,29 +148,21 @@ brew install stats
 brew install tmux
 brew install tree
 brew install vim
+brew install wget
 
-# gclip
+# Install go and tools
+goversion=$(curl -s https://go.dev/VERSION?m=text | head -n 1 | sed s/go//)
+install-go "$goversion"
 go install golang.design/x/clipboard/cmd/gclip@latest
 
 # Install applications
-brew install --cask bitwarden
-brew install --cask firefox
-brew install --cask gimp
-brew install --cask hiddenbar
-brew install --cask libreoffice
-brew install --cask lulu
-brew install --cask keepingyouawake
-brew install --cask openvpn-connect
-brew install --cask protonvpn
 brew install --cask rectangle
-brew install --cask signal
-brew install --cask vlc
 
 ###########################################
 # Package configuration
 
 # Set default shell to homebrew's newer bash
-shell=/usr/local/bin/bash
+shell=/opt/homebrew/bin/bash
 if ! grep "$shell" /etc/shells >/dev/null 2>&1; then
 	echo "$shell" | sudo tee -a /etc/shells >/dev/null
 fi
@@ -191,11 +172,3 @@ fi
 
 # Set default shell in Terminal also
 defaults write com.apple.Terminal Shell -string "$shell"
-
-###########################################
-# Galaxy
-
-# Add galaxy CA
-step certificate install --all "$DOTDIR/ssl/galaxy-ca.crt"
-
-# TODO: Set up VPN

@@ -17,7 +17,12 @@ fi
 
 mkdir -p "$install_dir"
 
-url="https://go.dev/dl/go${version}.linux-amd64.tar.gz"
+os=linux
+if [[ "$OSTYPE" =~ darwin* ]]; then
+	os=darwin
+fi
+
+url="https://go.dev/dl/go${version}.${os}-amd64.tar.gz"
 dl=$(mktemp --suffix .tar.gz -t go-XXX)
 wget -O "$dl" "$url"
 
