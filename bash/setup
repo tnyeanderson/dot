@@ -11,3 +11,4 @@ if [[ -f "$bashprofile" ]] && [[ ! -L "$bashprofile" ]] && [[ ! -e "$localprofil
 fi
 
 "$BINDIR/lns" "$(pwd)/.bash_profile" "$bashprofile"
+"$BINDIR/lns" "$(pwd)/.bash_alias_completion" "$HOME/.bash_alias_completion"

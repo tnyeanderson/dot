@@ -62,19 +62,23 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # Don't tab-complete tildes
 _expand() { true; }
 
+# Alias completion functions
+# shellcheck disable=1091
+source "$HOME/.bash_alias_completion"
+
 # ----------------------------------------------------
 # GIT
 # ----------------------------------------------------
 
-alias g=git
-alias ga='git add'
-alias gb='git checkout -b'
-alias gc='git commit'
-alias gd='git diff'
-alias gdc='git diff --cached'
-alias gl='git log'
-alias gp='git pull'
-alias gs='git status'
+alias_with_completion g git
+alias_with_completion ga git add
+alias_with_completion gb git checkout -b
+alias_with_completion gc git commit
+alias_with_completion gd git diff
+alias_with_completion gdc git diff --cached
+alias_with_completion gl git log
+alias_with_completion gp git pull
+alias_with_completion gs git status
 
 # ----------------------------------------------------
 # PYTHON
@@ -87,8 +91,8 @@ export PYTHONDONTWRITEBYTECODE=1
 # DOCKER
 # ----------------------------------------------------
 
-alias d=docker
-alias c='docker compose'
+alias_with_completion d docker
+alias_with_completion c docker compose
 
 # ----------------------------------------------------
 # KUBERNETES
@@ -197,6 +201,8 @@ export GROFF_NO_SGR=1              # for konsole and gnome-terminal
 # COMPLETIONS
 # ----------------------------------------------------
 
+# TODO: In bash 5.3, the read can be replaced with:
+#   compgen -V COMPREPLY
 _complete_dirs_in_dir() {
 	dir=$1
 	word=$2

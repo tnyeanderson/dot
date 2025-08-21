@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# Completion function for aliases that calls the upstream program's completion
+# function exactly as if it was called as a completion to the original program.
+# Must have been set up first with `___complete_alias_init`.
+#
+#   Example: complete -F ___complete_alias gd
+___complete_alias() {
+	local alias_name to_complete orig_cmd_var complete_config \
+		upstream_complete_func orig_cmd cmd_str len_diff word_diff
+	alias_name=$1
+	to_complete=$2
+	orig_cmd_var=$(_get_alias_complete_var "$alias_name")
+	readarray -t complete_config <<<"${!orig_cmd_var}"
+	upstream_complete_func=${complete_config[0]}
+	orig_cmd=("${complete_config[@]:1}")
+	cmd_str="${orig_cmd[*]}"
+	len_diff=$((${#cmd_str} - ${#alias_name}))
+	word_diff=$((${#orig_cmd[@]} - 1))
+	COMP_LINE=${COMP_LINE/#$alias_name/$cmd_str}
+	COMP_POINT=$((COMP_POINT + len_diff))
+	COMP_WORDS=("${orig_cmd[@]}" "${COMP_WORDS[@]:1}")
+	COMP_CWORD=$((COMP_CWORD + word_diff))
+	export COMP_LINE COMP_POINT COMP_WORDS COMP_CWORD
+	"$upstream_complete_func" "${orig_cmd[0]}" "$to_complete" "${COMP_WORDS[$COMP_CWORD - 1]}"
+}
+
+# Initialize completion for an alias. A variable is stored which contains the
+# upstream completion function, and the value of the alias (as separate
+# arguments). Since these values are newline-separated, the alias itself cannot
+# include any newlines. Spaces in alias arguments are supported.
+#
+#   Example: ___complete_alias_init gd __git_wrap__git_main git diff
+___complete_alias_init() {
+	local alias_name upstream_comp_func var_name
+	alias_name=$1
+	upstream_comp_func=$2
+	shift 2
+	var_name=$(_get_alias_complete_var "$alias_name")
+	printf -v "$var_name" '%s\n' "$upstream_comp_func" "$@"
+}
+
+_get_alias_complete_var() {
+	local alias_name=$1
+	echo "___alias_complete__${alias_name//-/_}"
+}
+
+# Parse the result of "complete -p" and print the -F argument, essentially
+# returning the function that provides completion for a program.
+#
+#   Example: complete -p git | _get_complete_func
+_get_complete_func() {
+	perl -ne 'print $2 if /(-F )([^ ]+)/'
+}
+
+# Run the "complete" command to set up completion for an alias. It is called
+# with the same options that were used to set up the upstream program's
+# completion. Must provide the alias and the upstream command (as separate
+# arguments).
+#
+#   Example: complete_alias gd git diff
+complete_alias() {
+	local alias_name orig_comp_cmd orig_comp_func alias_complete
+	alias_name=$1
+	shift
+	orig_comp_cmd=$(complete -p "$1")
+	orig_comp_func=$(_get_complete_func <<<"$orig_comp_cmd")
+	___complete_alias_init "$alias_name" "$orig_comp_func" "$@"
+	alias_complete="${orig_comp_cmd/%$1/$alias_name}"
+	alias_complete="${alias_complete/-F $orig_comp_func/-F ___complete_alias}"
+	eval "${alias_complete}"
+}
+
+# Easiest way to set up an alias with completion. Sets the alias and wires up
+# everything automatically in the majority of cases. More complex aliases may
+# need to call the underlying functions directly.
+#
+#   Example: alias_with_completion gd git diff
+alias_with_completion() {
+	local alias_name=$1
+	shift
+	# shellcheck disable=SC2139
+	alias "$alias_name=${*@Q}"
+	if ! complete -p "$1" >/dev/null 2>&1; then
+		_completion_loader "$1"
+	fi
+	complete_alias "$alias_name" "$@"
+}
