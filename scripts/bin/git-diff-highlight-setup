@@ -17,10 +17,13 @@ for location in "${preferred_locations[@]}"; do
 	fi
 done
 
-# Look in /usr for diff-highlight if we haven't found it yet
-if [[ -z "$differ" ]]; then
-	differ=$(find /usr -type f -name diff-highlight | head -n 1)
-fi
+# Search last resort locations if we haven't found it yet
+for dir in /usr /opt; do
+	if [[ -n "$differ" ]]; then
+		break
+	fi
+	differ=$(find "$dir" -type f -name diff-highlight | head -n 1)
+done
 
 if [[ -z "$differ" ]]; then
 	echo "error: diff-highlight program not found"
