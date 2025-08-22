@@ -62,6 +62,11 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # Don't tab-complete tildes
 _expand() { true; }
 
+# Bash completion in MacOS
+homebrew_bash_complete=/opt/homebrew/etc/profile.d/bash_completion.sh
+# shellcheck disable=1090
+[[ -r "$homebrew_bash_complete" ]] && source "$homebrew_bash_complete"
+
 # Alias completion functions
 # shellcheck disable=1091
 source "$HOME/.bash_alias_completion"
@@ -70,15 +75,17 @@ source "$HOME/.bash_alias_completion"
 # GIT
 # ----------------------------------------------------
 
-alias_with_completion g git
-alias_with_completion ga git add
-alias_with_completion gb git checkout -b
-alias_with_completion gc git commit
-alias_with_completion gd git diff
-alias_with_completion gdc git diff --cached
-alias_with_completion gl git log
-alias_with_completion gp git pull
-alias_with_completion gs git status
+if command -v git >/dev/null 2>&1; then
+	alias_with_completion g git
+	alias_with_completion ga git add
+	alias_with_completion gb git checkout -b
+	alias_with_completion gc git commit
+	alias_with_completion gd git diff
+	alias_with_completion gdc git diff --cached
+	alias_with_completion gl git log
+	alias_with_completion gp git pull
+	alias_with_completion gs git status
+fi
 
 # ----------------------------------------------------
 # PYTHON
@@ -91,8 +98,10 @@ export PYTHONDONTWRITEBYTECODE=1
 # DOCKER
 # ----------------------------------------------------
 
-alias_with_completion d docker
-alias_with_completion c docker compose
+if command -v docker >/dev/null 2>&1; then
+	alias_with_completion d docker
+	alias_with_completion c docker compose
+fi
 
 # ----------------------------------------------------
 # KUBERNETES

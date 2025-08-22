@@ -82,7 +82,7 @@ alias_with_completion() {
 	# shellcheck disable=SC2139
 	alias "$alias_name=${*@Q}"
 	if ! complete -p "$1" >/dev/null 2>&1; then
-		_completion_loader "$1"
+		_comp_load "$1" 2>/dev/null || _completion_loader "$1"
 	fi
 	complete_alias "$alias_name" "$@"
 }
