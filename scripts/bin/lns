@@ -25,11 +25,11 @@ BACKUP="${TARGET}.${TIMESTAMP}"
 if [[ -e "$TARGET" ]]; then
 	EXISTING="$(readlink "$TARGET")"
 	if [[ -L "$TARGET" ]] && [[ "$EXISTING" == "$SOURCE" ]]; then
-		echo "$TARGET link is already correct. Skipping..."
+		echo "$TARGET link is already correct. Skipping..." >&2
 		exit
 	fi
 	mv "$TARGET" "$BACKUP"
-	echo "Existing $TARGET was backed up to $BACKUP"
+	echo "Existing $TARGET was backed up to $BACKUP" >&2
 fi
 
 ln -sv "$SOURCE" "$TARGET"
