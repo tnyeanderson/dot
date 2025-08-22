@@ -177,7 +177,7 @@ function OnOpenBash()
   " :make should run shfmt and shellcheck
   setlocal makeprg=shfmt\ -w\ %\ &&\ shellcheck\ -f\ gcc\ %
   " shfmt errors
-  setlocal errorformat^=%f:\ %o:%l:%c:\ %m
+  setlocal errorformat^=%f:%l:%c:\ %m
 endfunction
 
 function OnOpenMarkdown()
