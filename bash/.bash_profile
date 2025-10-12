@@ -72,6 +72,14 @@ homebrew_bash_complete=/opt/homebrew/etc/profile.d/bash_completion.sh
 source "$HOME/.bash_alias_completion"
 
 # ----------------------------------------------------
+# VIM
+# ----------------------------------------------------
+
+if command -v vim >/dev/null 2>&1; then
+	alias_with_completion vi vim
+fi
+
+# ----------------------------------------------------
 # GIT
 # ----------------------------------------------------
 
