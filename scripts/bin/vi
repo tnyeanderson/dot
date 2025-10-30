@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# This is just a fallthrough, since aliases don't pass through to subshells/scripts.
+
+exec vim "$@"
