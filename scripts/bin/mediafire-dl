@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Modified from:
+# https://gist.github.com/CypherpunkSamurai/bf81c9444bfdc35fb285b0815d058b11
+
+url=$1
+
+curl "$url" | grep -Eo "http.+download.?+\.mediafire\.com.*\" " | sed -e 's/" $//g' | xargs curl -O
