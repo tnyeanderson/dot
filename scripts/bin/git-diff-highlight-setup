@@ -1,6 +1,8 @@
 #!/bin/bash
 
-if git config --global --get pager.diff >/dev/null 2>&1; then
+local_git_config="$HOME/.gitconfig.local"
+
+if git config -f "$local_git_config" --get pager.diff >/dev/null 2>&1; then
 	echo "skipping: pager.diff is already set in the git config"
 	exit 0
 fi
@@ -31,4 +33,4 @@ if [[ -z "$differ" ]]; then
 fi
 
 pager="perl $differ | less"
-git config --global pager.diff "$pager"
+git config -f "$local_git_config" pager.diff "$pager"

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+local_git_config="$HOME/.gitconfig.local"
+
+for path in user.email user.name qclone.prefix qclone.owner qclone.suffix; do
+	if git config -f "$local_git_config" --get "$path" >/dev/null 2>&1; then
+		echo "skipping: $path is already set in the local git config"
+		continue
+	fi
+
+	read -rp "$path: " value
+	if [[ -n "$value" ]]; then
+		git config -f "$local_git_config" "$path" "$value"
+	fi
+done

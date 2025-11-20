@@ -1,6 +1,3 @@
-[user]
-	email = me@thomasanderson.cloud
-	name = thomas
 [merge]
 	conflictstyle = diff3
 	tool = vimdiff
@@ -10,9 +7,5 @@
 	editor = vi
 [push]
 	autoSetupRemote = true
-[qclone]
-	prefix = git@github.com:
-	owner = tnyeanderson
-	suffix = .git
-[pager]
-	diff = perl /usr/share/doc/git/contrib/diff-highlight/diff-highlight | less
+[include]
+	path = ~/.gitconfig.local
