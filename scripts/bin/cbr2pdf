@@ -12,7 +12,6 @@ while [[ -n "$1" ]]; do
 	file=$1
 	tmp="$(mktemp -d)"
 	fullpath=$(realpath "$file")
-	inputdir=$(dirname "$file")
 	inputname=$(basename "$file")
 	pdfname="${inputname%.cb?}.pdf"
 	pdf="$outputdir/$pdfname"
