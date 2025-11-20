@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Pipe a kubectl get -oname command here to get the resource names without the kind prefix.
+
+awk -F/ '{print $2}'
