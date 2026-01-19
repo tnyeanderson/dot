@@ -130,6 +130,12 @@ function! ToggleCheckbox()
 endfunction
 noremap <silent> <leader>c :call ToggleCheckbox()<CR>
 
+" format markdown table using pandoc
+function! MarkdownTableFormat() range
+    '<,'>!pandoc -t commonmark_x
+endfunction
+command! -range MarkdownTableFormat call MarkdownTableFormat()
+
 " print <filepath>:<linenumber>
 function! FileLine()
   echo expand('%') . ':' . line('.')
