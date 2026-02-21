@@ -29,7 +29,9 @@ else
 fi
 
 for node in "${nodes[@]}"; do
-	# kubectl-multidoc would be faster, but is an additional dependency
+	# kubectl-multidoc would be faster, but is an additional dependency.
+	# Since the pod list is (generally) limited to 110 per node, the
+	# performance impact should be minimal.
 	echo '---'
 	kubectl get po --field-selector spec.nodeName="$node" "$@" -oyaml |
 		yq '.items[] | split_doc'
