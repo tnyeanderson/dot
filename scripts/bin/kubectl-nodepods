@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e
+
+declare -a args
+declare -a nodes
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+	--)
+		shift
+		nodes+=("$@")
+		break
+		;;
+	*)
+		args+=("$1")
+		;;
+	esac
+	shift
+done
+
+# If -- was not provided to separate positional args,
+# then all args are considered node names.
+if [[ "${#nodes[@]}" -eq 0 ]]; then
+	nodes+=("${args[@]}")
+	set --
+else
+	set -- "${args[@]}"
+fi
+
+for node in "${nodes[@]}"; do
+	# kubectl-multidoc would be faster, but is an additional dependency
+	echo '---'
+	kubectl get po --field-selector spec.nodeName="$node" "$@" -oyaml |
+		yq '.items[] | split_doc'
+done

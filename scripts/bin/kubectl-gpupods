@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+yq_query='
+select(
+  .spec.containers |
+  map(
+    select(
+			((.resources.limits."nvidia.com/gpu" // 0) | to_number > 0) or
+			((.resources.requests."nvidia.com/gpu" // 0) | to_number > 0)
+    )
+  ) |
+  length > 0
+) |
+select(
+  (.status.phase == "Running") or
+  (.status.phase == "Pending")
+)
+'
+
+kubectl-nodepods "$@" | yq "$yq_query"

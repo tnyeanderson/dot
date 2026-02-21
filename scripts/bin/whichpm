@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use File::Spec;
+
+# Check if a module name is provided
+die "Usage: $0 <module_name>\n" unless @ARGV;
+
+# Get the module name from command line arguments
+my $module_name = $ARGV[0];
+
+# Convert module name to filesystem path
+(my $module_file = $module_name) =~ s{::}{/}g;
+$module_file .= '.pm';
+
+# Search through @INC paths
+foreach my $path (@INC) {
+    my $full_path = File::Spec->catfile($path, $module_file);
+    if (-e $full_path) {
+        print "$full_path\n";
+        exit 0;
+    }
+}
+
+# If module not found
+exit 1;
