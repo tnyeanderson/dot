@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Take a script on stdin, and run it for each arg.
+#
+# Uses a bisect algorithm. Starting at the first and last arg, and working
+# inward, run the script with the arg as $1. If the script returns non-zero,
+# mark as "bad". If zero, mark as "good". The earliest identified "bad" arg is
+# printed to STDOUT. STDERR is populated with debug information. If the
+# earliest bad arg cannot be identified, a non-zero exit code is returned.
+
+script=$(cat)
+args=("$@")
+
+# Create a temporary directory
+declare -a results
+
+check_index() {
+	arg=${args[$1]}
+	echo -n "checking index $1: $arg" >&2
+	if bash -s -- "$arg" <<<"$script" >/dev/null 2>&1; then
+		echo ' (good)' >&2
+		return 0
+	fi
+	echo ' (bad)' >&2
+	return 1
+}
+
+# If the last (latest) arg is good, abort the bisect
+last_index=$((${#args[@]} - 1))
+if check_index "$last_index"; then
+	echo "error: latest arg is good: ${args[$last_index]}" >&2
+	exit 1
+fi
+
+# Start at the first (earliest) arg and bisect from there.
+current_index=0
+latest_good=0
+earliest_bad=$last_index
+results["$last_index"]=bad
+while :; do
+	current_arg=${args[$current_index]}
+	result=bad
+	check_index "$current_index" && result=good
+	results["$current_index"]=$result
+
+	if [[ "$result" == bad ]]; then
+		if [[ "$current_index" == 0 ]] || [[ "${results[$current_index - 1]}" == good ]]; then
+			# Found
+			echo "$current_arg"
+			exit
+		fi
+		# Go left
+		earliest_bad=$current_index
+		current_index=$((current_index - (current_index - latest_good) / 2))
+		continue
+	fi
+
+	if [[ "${results[$current_index + 1]}" == bad ]]; then
+		# Found
+		echo "${args[$current_index + 1]}"
+		exit
+	fi
+	# Go right
+	latest_good=$current_index
+	current_index=$((current_index + (earliest_bad - current_index) / 2))
+done
+
+# If no bad arg is identified
+echo 'error: failed to identify first bad arg' >&2
+exit 1
