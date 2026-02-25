@@ -1,0 +1,11 @@
+#!/bin/bash
+
+server=$1
+
+server="${server#https://}"
+IFS=: read -r host port <<<"$server"
+: "${port:=443}"
+
+set -x
+
+echo | openssl s_client -connect "$host:$port" -showcerts | openssl x509 -noout -text
