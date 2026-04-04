@@ -72,6 +72,14 @@ homebrew_bash_complete=/opt/homebrew/etc/profile.d/bash_completion.sh
 source "$HOME/.bash_alias_completion"
 
 # ----------------------------------------------------
+# SSH
+# ----------------------------------------------------
+
+# Disable GUI SSH password prompts, force TTY prompt
+unset SSH_ASKPASS
+unset SSH_ASKPASS_REQUIRE
+
+# ----------------------------------------------------
 # VIM
 # ----------------------------------------------------
 
