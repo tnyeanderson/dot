@@ -1,6 +1,7 @@
 #!/bin/bash
 
 server=$1
+shift
 
 server="${server#https://}"
 IFS=: read -r host port <<<"$server"
@@ -8,4 +9,4 @@ IFS=: read -r host port <<<"$server"
 
 set -x
 
-echo | openssl s_client -connect "$host:$port" -showcerts | openssl x509 -noout -text
+echo | openssl s_client -connect "$host:$port" -showcerts | openssl x509 -noout -text "$@"
